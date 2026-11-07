@@ -6,87 +6,333 @@
 <title>دار روضة المحبين لتحفيظ القرآن الكريم</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--g:#0d4a3e;--g2:#17705a;--gold:#b48a2c;--bg:#fbf7ec;--card:#fff;--tx:#23322d;--mu:#6b7a74;--bd:#e6dfc8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--g:#0d4a3e;--g2:#17705a;--gold:#b48a2c;--bg:#fbf7ec;--card:#fff;--tx:#23322d;--mu:#6b7a74;--bd:#e6dfc8}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--g:#46b596;--g2:#2f8f76;--gold:#d8b45e;--bg:#111c18;--card:#192924;--tx:#eaf1ee;--mu:#9bb0a8;--bd:#2a3f38}}
 :root[data-theme=dark]{--g:#46b596;--g2:#2f8f76;--gold:#d8b45e;--bg:#111c18;--card:#192924;--tx:#eaf1ee;--mu:#9bb0a8;--bd:#2a3f38}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,Tahoma,sans-serif;line-height:1.8}
 h1,h2,h3{font-family:Amiri,'Traditional Arabic',serif;margin:0}
-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--g);color:#fff;display:flex;gap:6px;align-items:center;padding:8px 14px;flex-wrap:wrap}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--g);z-index:19}
-nav b{font-family:Amiri,serif;font-size:20px;margin-inline-end:auto;color:#fff}
-nav a{color:#fff;text-decoration:none;font-size:14px;padding:2px 8px;border-radius:12px}nav a:hover{background:#ffffff22}
-.btn{background:var(--gold);color:#23322d;border:0;border-radius:10px;padding:7px 16px;font:600 14px Cairo,sans-serif;cursor:pointer;text-decoration:none;display:inline-block}
-.btn.s{background:transparent;border:1px solid var(--bd);color:var(--tx)}.btn.d{background:#b3402f;color:#fff}.btn.sm{padding:3px 10px;font-size:12px}
-.hero{background:linear-gradient(160deg,var(--g),var(--g2));color:#fff;text-align:center;padding:60px 18px 70px;position:relative;overflow:hidden}
+nav{position:sticky;top:0;z-index:20;background:var(--g);color:#fff;display:flex;gap:6px;align-items:center;padding:10px 16px;flex-wrap:wrap}
+nav b{font-family:Amiri,serif;font-size:20px;margin-inline-end:auto}
+nav a{color:#fff;text-decoration:none;font-size:14px;padding:4px 10px;border-radius:12px}nav a:hover,nav a.on{background:#ffffff22}
+.btn{background:var(--gold);color:#23322d;border:0;border-radius:10px;padding:8px 16px;font:600 14px Cairo,sans-serif;cursor:pointer}
+.btn.s{background:transparent;border:1px solid var(--bd);color:var(--tx)}.btn.d{background:#b3402f;color:#fff}.btn.sm{padding:4px 10px;font-size:12px}
+.hero{background:linear-gradient(160deg,var(--g),var(--g2));color:#fff;text-align:center;padding:50px 18px 60px;position:relative}
 .hero:after{content:"";position:absolute;inset:auto 0 0;height:6px;background:var(--gold)}
-.hero h1{font-size:clamp(32px,6vw,54px)}.hero p{max-width:640px;margin:10px auto;opacity:.95}
-.ay{font-family:Amiri,serif;font-size:24px;color:#f0dca0;margin-top:14px}
-section{max-width:1080px;margin:auto;padding:38px 16px}
-section>h2{color:var(--g);font-size:32px;text-align:center;margin-bottom:6px}
-section>h2:after{content:"";display:block;width:70px;height:3px;background:var(--gold);margin:6px auto 0;border-radius:3px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin-top:22px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;box-shadow:0 2px 8px #0000000d}
+.hero img{width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);margin-bottom:12px}
+.hero h1{font-size:clamp(28px,5vw,48px)}.ay{font-family:Amiri,serif;font-size:22px;color:#f0dca0;margin-top:12px}
+section{max-width:1080px;margin:auto;padding:36px 16px}
+section>h2{color:var(--g);font-size:30px;text-align:center;margin-bottom:8px}
+section>h2:after{content:"";display:block;width:70px;height:3px;background:var(--gold);margin:8px auto 0;border-radius:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:20px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;box-shadow:0 2px 8px #0000000d}
 .card img.p{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--bd)}
-.card h3{color:var(--g);font-size:22px;margin-top:8px}.mu{color:var(--mu);font-size:14px}
-.bar{height:8px;background:var(--bd);border-radius:6px;overflow:hidden;margin:4px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--g2),var(--gold))}
+.card h3{color:var(--g);font-size:20px;margin-top:8px}.mu{color:var(--mu);font-size:14px}
 .empty{text-align:center;color:var(--mu);padding:30px;grid-column:1/-1}
 .st{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-top:1px dashed var(--bd);font-size:14px}
 details summary{cursor:pointer;color:var(--g);font-weight:600;margin:8px 0}
 .post img,.post audio{width:100%;border-radius:12px;margin-top:8px}
-.soc{position:fixed;left:12px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;z-index:30}
-.soc a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 3px 10px #0004;transition:.2s}.soc a:hover{transform:scale(1.12)}
+.soc{position:fixed;left:12px;bottom:20px;display:flex;flex-direction:column;gap:10px;z-index:30}
+.soc a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 3px 10px #0004}
 .soc svg{width:24px;height:24px;fill:#fff}
-footer{background:var(--g);color:#fff;text-align:center;padding:22px 12px;font-size:14px}
-.ov{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto;padding:calc(12px + env(safe-area-inset-top,0px)) 14px 30px}
+footer{background:var(--g);color:#fff;text-align:center;padding:22px 12px;font-size:14px;margin-top:40px}
+.ov{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto;padding:16px}
 .md{position:fixed;inset:0;background:#0007;z-index:60;display:grid;place-items:center;padding:14px}
-.md>div{background:var(--card);border-radius:16px;padding:18px;width:min(480px,100%);max-height:90vh;overflow:auto}
+.md>div{background:var(--card);border-radius:16px;padding:20px;width:min(480px,100%);max-height:90vh;overflow:auto}
 label{display:block;font-size:13px;margin-top:10px;color:var(--mu)}
-input,select,textarea{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
-.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.tabs .btn{background:var(--card);border:1px solid var(--bd);color:var(--tx)}.tabs .btn.on{background:var(--g);color:#fff}
-.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px;border-bottom:1px solid var(--bd);text-align:right}
-.pg{display:none}.pg.on{display:block;animation:f .35s}@keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.tabs .btn{background:var(--card);border:1px solid var(--bd);color:var(--tx)}.tabs .btn.on{background:var(--g);color:#fff}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:8px;border-bottom:1px solid var(--bd);text-align:right}
+.pg{display:none}.pg.on{display:block}
+.bar{height:8px;background:var(--bd);border-radius:6px;overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--g2),var(--gold))}
 </style>
 </head>
 <body>
-<!-- NOTE: This is a placeholder. The full original file from the ZIP is more complete with admin panel. Please upload the full index.html from the ZIP via GitHub web interface. -->
 <nav>
   <b>دار روضة المحبين</b>
-  <a href="#home">الرئيسية</a>
-  <a href="#groups">المجموعات</a>
-  <a href="#graduates">الخريجون</a>
-  <a href="#posts">المنشورات</a>
-  <a href="#admin" id="adminLink" style="display:none">لوحة الإشراف</a>
-  <button class="btn sm" id="themeBtn" onclick="toggleTheme()">🌙</button>
-  <button class="btn sm" id="loginBtn" onclick="toggleAuth()">دخول</button>
+  <a href="#home" class="navl on">الرئيسية</a>
+  <a href="#groups" class="navl">المجموعات</a>
+  <a href="#grads" class="navl">الخريجون</a>
+  <a href="#news" class="navl">المنشورات</a>
+  <a href="#about" class="navl">عن الدار</a>
+  <a href="#" id="adminBtn" style="display:none">لوحة الإشراف</a>
+  <button class="btn sm" id="themeBtn">🌙</button>
+  <button class="btn sm" id="lg">دخول</button>
 </nav>
-<div class="hero" id="home">
-  <img src="assets/logo.jpg" alt="شعار" style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);margin-bottom:12px">
-  <h1>دار روضة المحبين</h1>
-  <p>لتحفيظ القرآن الكريم</p>
-  <div class="ay">﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾</div>
+
+<div id="home" class="pg on">
+  <div class="hero">
+    <img src="assets/logo.jpg" alt="شعار الدار" onerror="this.style.display='none'">
+    <h1>دار روضة المحبين</h1>
+    <p>لتحفيظ القرآن الكريم</p>
+    <div class="ay">﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾</div>
+  </div>
+  <section>
+    <h2>أحدث المنشورات</h2>
+    <div id="homeNews" class="grid"><div class="empty">جاري التحميل...</div></div>
+  </section>
 </div>
-<section id="groups"><h2>المجموعات</h2><div class="grid" id="groupsGrid"><div class="empty">جاري التحميل...</div></div></section>
-<section id="graduates"><h2>الخريجون</h2><div class="grid" id="graduatesGrid"><div class="empty">جاري التحميل...</div></div></section>
-<section id="posts"><h2>المنشورات</h2><div id="postsList"><div class="empty">جاري التحميل...</div></div></section>
+
+<div id="groups" class="pg">
+  <section>
+    <h2>المجموعات</h2>
+    <div id="grpG" class="grid"><div class="empty">جاري التحميل...</div></div>
+  </section>
+</div>
+
+<div id="grads" class="pg">
+  <section>
+    <h2>الخريجون / الخاتمون</h2>
+    <div id="gradG" class="grid"><div class="empty">جاري التحميل...</div></div>
+  </section>
+</div>
+
+<div id="news" class="pg">
+  <section>
+    <h2>المنشورات والإعلانات</h2>
+    <div id="newsG"><div class="empty">جاري التحميل...</div></div>
+  </section>
+</div>
+
+<div id="about" class="pg">
+  <section>
+    <h2>عن الدار</h2>
+    <div class="card" style="max-width:700px;margin:20px auto">
+      <p id="aboutTx">دار روضة المحبين لتحفيظ القرآن الكريم — مكان للعلم والتزكية.</p>
+    </div>
+  </section>
+</div>
+
+<div class="soc" id="soc"></div>
 <footer>دار روضة المحبين لتحفيظ القرآن الكريم &copy; <span id="year"></span></footer>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, doc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const fs = getFirestore(app);
+
 document.getElementById("year").textContent = new Date().getFullYear();
-function toggleTheme(){const root=document.documentElement;const next=root.getAttribute("data-theme")==="dark"?"light":"dark";root.setAttribute("data-theme",next);localStorage.setItem("theme",next);}
-(function(){const t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t);})();
-let isAdmin=false;
-onAuthStateChanged(auth,async u=>{const btn=document.getElementById("loginBtn");const link=document.getElementById("adminLink");if(u){btn.textContent="خروج";const a=await getDoc(doc(db,"admins",u.uid));isAdmin=a.exists();link.style.display=isAdmin?"":"none";}else{btn.textContent="دخول";link.style.display="none";isAdmin=false;}});
-window.toggleAuth=()=>auth.currentUser?signOut(auth):signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>alert("تعذر تسجيل الدخول: "+e.code));
-onSnapshot(collection(db,"groups"),snap=>{const g=document.getElementById("groupsGrid");if(snap.empty){g.innerHTML="<div class=\"empty\">لا توجد مجموعات بعد</div>";return;}g.innerHTML="";snap.forEach(d=>{const x=d.data();g.innerHTML+=`<div class="card"><h3>${x.name||"مجموعة"}</h3><p class="mu">${x.teacher||""}</p><p>${x.desc||""}</p></div>`;});});
-onSnapshot(collection(db,"graduates"),snap=>{const g=document.getElementById("graduatesGrid");if(snap.empty){g.innerHTML="<div class=\"empty\">لا يوجد خريجون بعد</div>";return;}g.innerHTML="";snap.forEach(d=>{const x=d.data();g.innerHTML+=`<div class="card"><h3>${x.name||""}</h3><p class="mu">${x.year||""}</p></div>`;});});
-onSnapshot(query(collection(db,"posts"),orderBy("createdAt","desc")),snap=>{const g=document.getElementById("postsList");if(snap.empty){g.innerHTML="<div class=\"empty\">لا توجد منشورات بعد</div>";return;}g.innerHTML="";snap.forEach(d=>{const x=d.data();g.innerHTML+=`<div class="card post" style="margin-bottom:14px"><h3>${x.title||""}</h3><p>${x.body||""}</p>${x.image?`<img src="${x.image}">`:""}</div>`;});});
+
+const themeBtn = document.getElementById("themeBtn");
+function applyTheme(t){ document.documentElement.setAttribute("data-theme", t); localStorage.setItem("theme", t); themeBtn.textContent = t==="dark"?"☀️":"🌙"; }
+applyTheme(localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light"));
+themeBtn.onclick = () => applyTheme(document.documentElement.getAttribute("data-theme")==="dark" ? "light" : "dark");
+
+const pages = ["home","groups","grads","news","about"];
+function show(p){
+  pages.forEach(id => document.getElementById(id).classList.toggle("on", id===p));
+  document.querySelectorAll(".navl").forEach(a => a.classList.toggle("on", a.getAttribute("href")==="#"+p));
+  location.hash = p;
+}
+window.addEventListener("hashchange", () => {
+  const h = (location.hash||"#home").slice(1);
+  show(pages.includes(h)?h:"home");
+});
+document.querySelectorAll(".navl").forEach(a => a.onclick = e => { e.preventDefault(); show(a.getAttribute("href").slice(1)); });
+show((location.hash||"#home").slice(1));
+
+const S = { groups:[], graduates:[], posts:[], students:[], teachers:[], settings:{}, users:[] };
+let me = null, isAdmin = false, myTeacher = null;
+
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({'&':'&','<':'<','>':'>','"':'"',"'":'&#39;'}[c]));
+const U = s => s && String(s).trim() ? String(s).trim() : "";
+const prog = s => (s.progress || s.parts || 0);
+
+function gname(id){ return (S.groups.find(g=>g.id===id)||{}).name || "—"; }
+
+function render(){
+  if(S.settings.about) document.getElementById("aboutTx").textContent = S.settings.about;
+
+  const IC = {
+    whatsapp: ["#25d366","M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23-1.48 0-2.93-.39-4.19-1.15l-.3-.17-3.12.82.83-3.04-.2-.32a8.188 8.188 0 01-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24zM8.68 7.35c-.16 0-.43.06-.66.31-.22.25-.87.86-.87 2.09 0 1.24.89 2.42 1.01 2.57.12.17 1.75 2.67 4.23 3.74 2.05.9 2.47.72 2.91.67.44-.05 1.42-.58 1.62-1.14.2-.56.2-1.05.14-1.14-.06-.1-.22-.16-.44-.28-.22-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.25-.64.78-.78.94-.14.17-.28.19-.5.07-.22-.12-.94-.35-1.8-1.1-.66-.59-1.11-1.32-1.24-1.54-.13-.22-.01-.34.1-.45.11-.11.25-.28.37-.42.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41-.14 0-.3-.01-.46-.01z"],
+    facebook: ["#1877f2","M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07c0 6.02 4.39 11.01 10.12 11.9v-8.43H7.08v-3.47h3.04V9.41c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.69.24 2.69.24v2.96h-1.52c-1.49 0-1.96.93-1.96 1.88v2.26h3.33l-.53 3.47h-2.8V24C19.61 23.08 24 18.09 24 12.07z"],
+    instagram: ["#e4405f","M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38 3.92 3.9 2.38 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 2.7.27.27 2.7.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95C23.73 2.7 21.3.27 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 100 12.32 6.16 6.16 0 000-12.32zM12 16a4 4 0 110-8 4 4 0 010 8zm6.41-11.85a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"]
+  };
+  document.getElementById("soc").innerHTML = Object.keys(IC).map(k => U(S.settings[k]) ? `<a href="${U(S.settings[k])}" target="_blank" rel="noopener" style="background:${IC[k][0]}"><svg viewBox="0 0 24 24"><path d="${IC[k][1]}"/></svg></a>` : "").join("");
+
+  document.getElementById("gradG").innerHTML = S.graduates.length
+    ? S.graduates.map(g => `<div class="card" style="text-align:center">${U(g.img)?`<img class="p" src="${U(g.img)}" alt="">`:""}<h3>${esc(g.name)}</h3><div class="mu">${esc(g.year||"")}</div><p>${esc(g.text||"")}</p></div>`).join("")
+    : '<div class="empty">سيتم إضافة الخاتمين قريبًا</div>';
+
+  document.getElementById("grpG").innerHTML = S.groups.length
+    ? S.groups.map(g => {
+        const ms = S.students.filter(s => s.groupId === g.id);
+        return `<div class="card">
+          <h3>${esc(g.name)}</h3>
+          <div class="mu">المعلم/ـة: ${esc(g.teacher||"—")} · عدد الطلاب: ${ms.length}</div>
+          <p class="mu">${esc(g.desc||"")}</p>
+          <details><summary>أسماء الطلاب</summary>
+            ${ms.map(s => `<div class="st"><span>${esc(s.name)}</span><span class="mu">${prog(s)} جزء</span></div>`).join("") || '<div class="mu">لا يوجد طلاب بعد</div>'}
+          </details>
+          ${U(g.wa) ? `<a class="btn" style="margin-top:10px;display:inline-block" href="${U(g.wa)}" target="_blank" rel="noopener">انضم لجروب الواتساب</a>` : ""}
+        </div>`;
+      }).join("")
+    : '<div class="empty">لم تُضف مجموعات بعد</div>';
+
+  const sorted = [...S.posts].sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const postCard = p => `<div class="card post" style="margin-bottom:14px">
+    <h3>${esc(p.title)}</h3>
+    <div class="mu">${p.ts ? new Date(p.ts).toLocaleDateString("ar-EG") : ""}</div>
+    <p>${esc(p.text||p.body||"")}</p>
+    ${U(p.img)?`<img src="${U(p.img)}" alt="">`:""}
+    ${U(p.audio)?`<audio controls src="${U(p.audio)}"></audio>`:""}
+  </div>`;
+  document.getElementById("newsG").innerHTML = sorted.length ? sorted.map(postCard).join("") : '<div class="empty">لا توجد إعلانات حاليًا</div>';
+  document.getElementById("homeNews").innerHTML = sorted.slice(0,3).length ? sorted.slice(0,3).map(postCard).join("") : '<div class="empty">لا توجد إعلانات حاليًا</div>';
+}
+
+function sub(col, cb){
+  return onSnapshot(collection(fs, col), snap => cb(snap.docs.map(d => ({...d.data(), id:d.id}))));
+}
+sub("groups", d => { S.groups = d; render(); });
+sub("graduates", d => { S.graduates = d; render(); });
+sub("posts", d => { S.posts = d; render(); });
+sub("students", d => { S.students = d; render(); });
+sub("teachers", d => {
+  S.teachers = d;
+  myTeacher = me ? d.find(t => t.id === me) : null;
+  render();
+});
+onSnapshot(doc(fs, "settings", "site"), snap => {
+  S.settings = snap.exists() ? snap.data() : {};
+  render();
+});
+
+onAuthStateChanged(auth, async u => {
+  me = u ? u.uid : null;
+  isAdmin = false;
+  document.getElementById("lg").textContent = u ? "خروج" : "دخول";
+  document.getElementById("adminBtn").style.display = "none";
+  if(u){
+    try {
+      await setDoc(doc(fs, "users", me), { name: u.displayName||"", email: u.email||"" }, { merge: true });
+      isAdmin = (await getDoc(doc(fs, "admins", me))).exists();
+      if(isAdmin) document.getElementById("adminBtn").style.display = "";
+    } catch(e){}
+  }
+  myTeacher = me ? S.teachers.find(t => t.id === me) : null;
+  render();
+});
+document.getElementById("lg").onclick = () => {
+  if(auth.currentUser) signOut(auth);
+  else signInWithPopup(auth, new GoogleAuthProvider()).catch(e => alert("تعذر تسجيل الدخول: " + e.code));
+};
+
+document.getElementById("adminBtn").onclick = e => { e.preventDefault(); openPanel(); };
+
+const CF = {
+  groups:   { t:"مجموعة", f:[["name","الاسم"],["teacher","المعلم"],["desc","الوصف","ta"],["wa","رابط واتساب"]] },
+  graduates:{ t:"خاتم",   f:[["name","الاسم"],["year","السنة"],["text","نبذة","ta"],["img","رابط الصورة"]] },
+  posts:    { t:"منشور",  f:[["title","العنوان"],["text","المحتوى","ta"],["img","رابط صورة"],["audio","رابط صوت"]] },
+  students: { t:"طالب",   f:[["name","الاسم"],["groupId","المجموعة","grp"],["progress","عدد الأجزاء"]] },
+  teachers: { t:"معلم",   f:[["name","الاسم"],["groupId","المجموعة","grp"]] },
+};
+
+function openPanel(tab="groups"){
+  const ov = document.createElement("div");
+  ov.className = "ov";
+  ov.id = "root";
+  document.body.appendChild(ov);
+  panel(tab);
+}
+
+function panel(tab="groups"){
+  const p = document.getElementById("root");
+  if(!p) return;
+  const visTabs = () => {
+    const t = [["groups","المجموعات"],["graduates","الخريجون"],["posts","المنشورات"],["students","الطلاب"],["settings","الإعدادات"]];
+    if(isAdmin) t.splice(4,0,["teachers","المعلمون"]);
+    return t;
+  };
+  let h = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <h2 style="color:var(--g)">لوحة الإشراف</h2>
+    <button class="btn s" id="x">إغلاق</button>
+  </div>
+  <div class="tabs">${visTabs().map(([k,l])=>`<button class="btn ${k===tab?'on':''}" data-t="${k}">${l}</button>`).join("")}</div>`;
+
+  if(tab==="settings"){
+    const s = S.settings;
+    h += `<div class="card" style="max-width:520px">
+      ${[["about","نبذة عن الدار","ta"],["whatsapp","رابط واتساب الدار"],["facebook","رابط فيسبوك"],["instagram","رابط انستجرام"]]
+        .map(([k,l,t]) => `<label>${l}</label>${t?`<textarea data-s="${k}">${esc(s[k]||"")}</textarea>`:`<input dir="ltr" data-s="${k}" value="${esc(s[k]||"")}">`}`).join("")}
+      <br><button class="btn" id="ss">حفظ الإعدادات</button>
+    </div>`;
+  } else {
+    const c = CF[tab];
+    let rows = S[tab] || [];
+    if(tab==="students" && !isAdmin && myTeacher) rows = rows.filter(s => s.groupId === myTeacher.groupId);
+    const cols = c.f.filter(f => !["ta","img","aud"].includes(f[2]));
+    h += `<button class="btn" data-add>＋ إضافة ${c.t}</button>
+      <div class="tw card" style="margin-top:12px">
+        <table><tr>${cols.map(f=>`<th>${f[1]}</th>`).join("")}<th></th></tr>
+        ${rows.map(r => `<tr>${cols.map(f => `<td>${f[2]==="grp" ? esc(gname(r[f[0]])) : esc(r[f[0]])}</td>`).join("")}
+          <td><button class="btn s sm" data-e="${r.id}">تعديل</button> <button class="btn d sm" data-d="${r.id}">حذف</button></td></tr>`).join("")
+          || `<tr><td colspan="9" class="mu">لا توجد بيانات</td></tr>`}
+        </table>
+      </div>`;
+    if(tab==="students" && !isAdmin && !myTeacher)
+      h += '<p class="mu" style="margin-top:12px">لم يتم ربط حسابك بمجموعة بعد. تواصل مع المدير.</p>';
+  }
+  p.innerHTML = h;
+  p.querySelector("#x").onclick = () => p.remove();
+  p.querySelectorAll("[data-t]").forEach(b => b.onclick = () => panel(b.dataset.t));
+  const addBtn = p.querySelector("[data-add]");
+  if(addBtn) addBtn.onclick = () => form(tab);
+  p.querySelectorAll("[data-e]").forEach(b => b.onclick = () => form(tab, (S[tab]||[]).find(r => r.id === b.dataset.e)));
+  p.querySelectorAll("[data-d]").forEach(b => b.onclick = async () => {
+    if(!confirm("هل أنت متأكد من الحذف؟")) return;
+    await deleteDoc(doc(fs, tab, b.dataset.d));
+  });
+  const ss = p.querySelector("#ss");
+  if(ss) ss.onclick = async () => {
+    const data = {};
+    p.querySelectorAll("[data-s]").forEach(el => data[el.dataset.s] = el.value);
+    await setDoc(doc(fs, "settings", "site"), data, { merge: true });
+    alert("تم الحفظ");
+  };
+}
+
+function form(tab, row=null){
+  const c = CF[tab];
+  const md = document.createElement("div");
+  md.className = "md";
+  let fields = c.f.map(([k,l,t]) => {
+    let val = row ? (row[k]||"") : "";
+    if(t==="grp"){
+      return `<label>${l}</label><select data-f="${k}">
+        <option value="">— اختر —</option>
+        ${S.groups.map(g => `<option value="${g.id}" ${val===g.id?"selected":""}>${esc(g.name)}</option>`).join("")}
+      </select>`;
+    }
+    if(t==="ta") return `<label>${l}</label><textarea data-f="${k}">${esc(val)}</textarea>`;
+    return `<label>${l}</label><input data-f="${k}" value="${esc(val)}" ${k.includes("wa")||k.includes("img")||k.includes("audio")||k.includes("http")?"dir=ltr":""}>`;
+  }).join("");
+  md.innerHTML = `<div>
+    <h3 style="color:var(--g);margin-bottom:8px">${row?"تعديل":"إضافة"} ${c.t}</h3>
+    ${fields}
+    <div style="margin-top:16px;display:flex;gap:8px">
+      <button class="btn" id="save">حفظ</button>
+      <button class="btn s" id="cancel">إلغاء</button>
+    </div>
+  </div>`;
+  document.body.appendChild(md);
+  md.querySelector("#cancel").onclick = () => md.remove();
+  md.querySelector("#save").onclick = async () => {
+    const data = {};
+    md.querySelectorAll("[data-f]").forEach(el => data[el.dataset.f] = el.value);
+    if(tab==="posts") data.ts = row?.ts || Date.now();
+    if(tab==="students") data.progress = Number(data.progress)||0;
+    if(row) await updateDoc(doc(fs, tab, row.id), data);
+    else await addDoc(collection(fs, tab), data);
+    md.remove();
+  };
+}
 </script>
 </body>
 </html>
