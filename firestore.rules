@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{d}/documents {
+    function signed() { return request.auth != null; }
+    function admin() { return signed() && exists(/databases/$(d)/documents/admins/$(request.auth.uid)); }
+    function teacherOf(g) {
+      return signed() && exists(/databases/$(d)/documents/teachers/$(request.auth.uid))
+        && get(/databases/$(d)/documents/teachers/$(request.auth.uid)).data.groupId == g;
+    }
+    match /{col}/{id} {
+      allow read: if col in ['groups','graduates','posts','settings','teachers','students'];
+      allow write: if col in ['groups','graduates','posts','settings','teachers'] && admin();
+    }
+    match /students/{id} {
+      allow create: if admin() || teacherOf(request.resource.data.groupId);
+      allow update: if admin() || (teacherOf(resource.data.groupId) && teacherOf(request.resource.data.groupId));
+      allow delete: if admin() || teacherOf(resource.data.groupId);
+    }
+    match /users/{uid} {
+      allow read: if admin() || (signed() && request.auth.uid == uid);
+      allow write: if signed() && request.auth.uid == uid;
+    }
+    match /admins/{uid} { allow read: if signed() && request.auth.uid == uid; }
+  }
+}
