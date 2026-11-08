@@ -98,7 +98,7 @@ addEventListener('hashchange',route);route();
 const CF={
  students:{t:'طالب',f:[['name','اسم الطالب'],['groupId','المجموعة','grp'],['juz','عدد الأجزاء المحفوظة (0-30)','num'],['cur','وصل إلى (سورة/جزء)'],['notes','ملاحظات المعلم','ta']]},
  groups:{t:'مجموعة',f:[['name','اسم المجموعة'],['teacher','اسم المعلم/ـة'],['wa','رابط جروب الواتساب'],['desc','وصف','ta']]},
- graduates:{t:'خاتم/ـة',f:[['name','الاسم'],['year','سنة/تاريخ الختم'],['text','كلمة','ta'],['img','الصورة','img']]},
+ graduates:{t:'خاتم/ـة',f:[['name','الاسم'],['year','التاريخ بالعربي (للعرض)'],['date','تاريخ الختم (يوم/شهر/سنة)','date'],['text','كلمة','ta'],['img','الصورة','img']]},
  posts:{t:'إعلان',f:[['title','العنوان'],['text','النص','ta'],['img','صورة','img'],['audio','تسجيل صوتي','aud']]},
  teachers:{t:'معلم',f:[['name','اسم المعلم/ـة'],['groupId','المجموعة المشرف عليها','grp'],['pin','الرقم السري للمعلم (اتركه فارغًا للإبقاء على القديم)','pw']]}
 };
@@ -111,7 +111,7 @@ function panel(){
  else{
   const c=CF[tab];let rows=S[tab];
   if(tab==='students'&&!isAdmin)rows=rows.filter(s=>myTeacher&&s.groupId===myTeacher.groupId);
-  const cols=c.f.filter(f=>!['ta','img','aud','pw'].includes(f[2]));
+  const cols=c.f.filter(f=>!['ta','img','aud','pw','date'].includes(f[2]));
   h+=`<button class="btn" data-add>＋ إضافة ${c.t}</button><div class="tw card" style="margin-top:10px"><table><tr>${cols.map(f=>`<th>${f[1]}</th>`).join('')}<th></th></tr>${rows.map(r=>`<tr>${cols.map(f=>`<td>${f[2]==='grp'?esc(gname(r[f[0]])):esc(r[f[0]])}</td>`).join('')}<td><button class="btn s sm" data-e="${r.id}">تعديل</button> <button class="btn d sm" data-d="${r.id}">حذف</button></td></tr>`).join('')||`<tr><td colspan="9" class="mu">لا توجد بيانات</td></tr>`}</table></div>`;
   if(tab==='students'&&!isAdmin&&!myTeacher)h+='<p class="mu">لم يتم ربط حسابك بمجموعة بعد. تواصل مع المدير.</p>';
  }
@@ -131,6 +131,7 @@ function form(coll,rec){
   else if(t==='grp')i=`<select name="${k}" ${!isAdmin?'disabled':''}>${S.groups.map(g=>`<option value="${g.id}" ${g.id===r[k]?'selected':''}>${esc(g.name)}</option>`).join('')}</select>`;
   else if(t==='img'||t==='aud')i=`<input name="${k}" dir="ltr" placeholder="رابط" value="${esc(r[k])}">${t==='img'?`<input type="file" data-f="${k}" accept="image/*" style="margin-top:4px">`:''}`;
   else if(t==='pw')i=`<input name="${k}" value="">`;
+  else if(t==='date'){const dv=r[k]||(r.ts?new Date(r.ts).toISOString().slice(0,10):'');i=`<input name="${k}" type="date" dir="ltr" value="${esc(dv)}">`;}
   else i=`<input name="${k}" value="${esc(r[k])}">`;
   return`<label>${l}</label>${i}`}).join('');
  m.innerHTML=`<div><h3 style="color:var(--g)">${rec?'تعديل':'إضافة'} ${c.t}</h3>${fl}<br><button class="btn" id="sv">حفظ</button> <button class="btn s" id="cn">إلغاء</button></div>`;
@@ -142,7 +143,11 @@ function form(coll,rec){
    const fi=m.querySelector(`[data-f="${k}"]`);if(fi&&fi.files[0]){v=await rz(fi.files[0])}
    d[k]=t==='num'?Math.min(30,Math.max(0,+v||0)):v.trim()}
   if(coll==='posts'&&!rec)d.ts=Date.now();
-  if(coll==='graduates'){if(!rec)d.ts=Date.now();else if(d.year!==(rec.year||''))d.ts=Date.now();else d.ts=rec.ts||Date.now();}
+  if(coll==='graduates'){
+    if(d.date){const t=new Date(d.date+'T12:00:00').getTime();d.ts=isNaN(t)?Date.now():t;}
+    else if(!rec)d.ts=Date.now();
+    else d.ts=rec.ts||Date.now();
+  }
   await api({op:'put',coll,item:{...(rec||{}),...d}});await refresh();
   m.remove()}catch(e){alert('تعذر الحفظ: '+(e.message||e.code))}};
 }
