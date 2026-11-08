@@ -63,11 +63,11 @@ nav a.on{background:var(--gold);color:#23322d}
 <section class="pg" id="grads"><h2>الخاتمون والخاتمات</h2><div class="grid" id="gradG"></div></section>
 <section class="pg" id="groups"><h2>مجموعات الدار</h2><div class="grid" id="grpG"></div></section>
 <section class="pg" id="news"><h2>الإعلانات والتحديثات</h2><div class="grid" id="newsG"></div></section>
-<footer><span class="lgw"><img src="assets/logo.jpg" alt=""></span><br>جميع الحقوق محفوظة © دار روضة المحبين — إدارة الشيخ مصطفى محمود الشال</footer>
+<footer><span class="lgw"><img src="assets/logo.jpg" alt=""></span><br>جميع الحقوق محفوظة © دار روضة المحبين — إدارة الشيخ مصطفى محمود الشال<br><span style="opacity:.85;font-size:13px;margin-top:6px;display:inline-block">Developed by .ENG\Mazen Medhat</span></footer>
 <div class="soc" id="soc"></div>
 <div id="root"></div>
 <script>
-const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'&#39;'}[c]));
 const U=u=>/^(https?:\/\/|data:image\/)/.test(u||'')?esc(u):'';
 const S={students:[],groups:[],graduates:[],posts:[],teachers:[],users:[],settings:{}};
 let A=null;try{A=JSON.parse(sessionStorage.getItem('rm_auth')||'null')}catch(e){}
@@ -148,10 +148,11 @@ const upd=()=>{isAdmin=!!A&&A.role==='admin';myTeacher=A&&A.role==='teacher'?{gr
 async function refresh(){try{const r=await fetch('/api/data',{cache:'no-store'}),t=await r.text();if(!r.ok||t===last)return;last=t;Object.assign(S,JSON.parse(t));upd();render()}catch(e){}}
 $('#lg').onclick=()=>{if(A){A=null;sessionStorage.removeItem('rm_auth');upd();return}
  const m=document.createElement('div');m.className='md';
- m.innerHTML=`<div><h3 style="color:var(--g)">دخول المشرفين</h3><label>أنا</label><select id="lw"><option value="admin">المدير</option>${S.teachers.map(t=>`<option value="${esc(t.id)}">${esc(t.name)} (معلم)</option>`).join('')}</select><label>كلمة السر / الرقم السري</label><input id="lp" type="password"><br><button class="btn" id="ok">دخول</button> <button class="btn s" id="no">إلغاء</button></div>`;
- document.body.appendChild(m);m.querySelector('#no').onclick=()=>m.remove();
- m.querySelector('#ok').onclick=async()=>{const who=m.querySelector('#lw').value,pass=m.querySelector('#lp').value;try{A={who,pass};const j=await api({op:'login'});A={who,pass,role:j.role,groupId:j.groupId};sessionStorage.setItem('rm_auth',JSON.stringify(A));m.remove();upd();render()}catch(e){A=null;alert('تعذر الدخول: '+e.message)}}};
-upd();refresh();setInterval(refresh,15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+ m.innerHTML=`<div><h3 style="color:var(--g)">دخول المشرفين</h3><label>أنا</label><select id="lwho"><option value="admin">مدير</option><option value="teacher">معلم</option></select><label>الاسم / المعرف</label><input id="lname"><label>الرقم السري</label><input id="lpass" type="password"><br><button class="btn" id="lok">دخول</button> <button class="btn s" id="lcn">إلغاء</button></div>`;
+ document.body.appendChild(m);
+ m.querySelector('#lcn').onclick=()=>m.remove();
+ m.querySelector('#lok').onclick=async()=>{try{const who=m.querySelector('#lwho').value,name=m.querySelector('#lname').value.trim(),pass=m.querySelector('#lpass').value;const j=await api({op:'login',who,name,pass});A={who,pass,role:j.role,groupId:j.groupId||null};sessionStorage.setItem('rm_auth',JSON.stringify(A));upd();m.remove();if(j.role==='admin'||j.role==='teacher')$('#adm').click()}catch(e){alert(e.message)}};};
+refresh();setInterval(refresh,15000);
 </script>
 </body>
 </html>
