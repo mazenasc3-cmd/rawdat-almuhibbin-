@@ -38,9 +38,10 @@ section>h2:after{content:"";display:block;width:60px;height:3px;background:var(-
 .soc{position:fixed;left:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:25}
 .soc a{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 3px 10px #0004}
 .soc svg{width:22px;height:22px;fill:#fff}
-.loc-bar{text-align:center;padding:8px 14px 20px}
-.loc-bar a{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bd);border-radius:999px;padding:10px 18px;text-decoration:none;color:var(--tx);font-size:14px;font-weight:600;box-shadow:0 2px 8px #0000000a}
-.loc-bar a:hover{border-color:var(--gold)}
+.loc-fab{position:fixed;right:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:25;display:none}
+.loc-fab a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#EA4335;color:#fff;box-shadow:0 3px 12px #0005;text-decoration:none;font-size:22px}
+.loc-fab a:active{transform:scale(.95)}
+.loc-bar{display:none!important}
 footer{background:var(--g);color:#fff;text-align:center;padding:22px 14px calc(28px + env(safe-area-inset-bottom,0px));font-size:13px;position:relative;z-index:5}
 .ov{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto;padding:14px;padding-top:calc(14px + env(safe-area-inset-top,0px))}
 .md{position:fixed;inset:0;background:#0007;z-index:60;display:grid;place-items:center;padding:12px}
@@ -68,6 +69,8 @@ input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-r
   .hero{padding:30px 14px 38px}
   .soc{left:8px;bottom:calc(14px + env(safe-area-inset-bottom,0px))}
   .soc a{width:42px;height:42px}
+  .loc-fab{right:8px;bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  .loc-fab a{width:46px;height:46px;font-size:20px}
   .grid{gap:14px;grid-template-columns:1fr}
   .card{padding:16px}
   footer{padding:24px 16px calc(36px + env(safe-area-inset-bottom,0px));font-size:13px;line-height:1.9}
@@ -126,6 +129,7 @@ input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-r
 <section class="pg" id="news"><h2>الإعلانات والتحديثات</h2><div class="grid" id="newsG"></div></section>
 
 <div class="loc-bar" id="locBar" hidden></div>
+<div class="loc-fab" id="locFab" hidden></div>
 <footer>
   <span class="lgw"><img src="assets/logo.jpg" alt=""></span><br>
   جميع الحقوق محفوظة © دار روضة المحبين — إدارة الشيخ مصطفى محمود الشال<br>
@@ -149,9 +153,13 @@ function render(){
   const st=S.settings||{};
   if(st.about)$('#aboutTx').textContent=st.about;
   $('#soc').innerHTML=Object.keys(IC).map(k=>U(st[k])?`<a href="${U(st[k])}" target="_blank" rel="noopener" style="background:${IC[k][0]}" aria-label="${k}"><svg viewBox="0 0 24 24"><path d="${IC[k][1]}"/></svg></a>`:'').join('');
-  const loc=$('#locBar');
-  if(U(st.location)){loc.hidden=false;loc.innerHTML=`<a href="${U(st.location)}" target="_blank" rel="noopener">📍 موقع الدار على الخريطة</a>`;}
-  else{loc.hidden=true;loc.innerHTML='';}
+  const locFab=$('#locFab');
+  if(locFab){
+    if(U(st.location)){
+      locFab.hidden=false;locFab.style.display='block';
+      locFab.innerHTML=`<a href="${U(st.location)}" target="_blank" rel="noopener" title="موقع الدار" aria-label="الموقع">📍</a>`;
+    }else{locFab.hidden=true;locFab.style.display='none';locFab.innerHTML='';}
+  }
 
   const grads=[...S.graduates].sort((a,b)=>(+b.num||0)-(+a.num||0));
   $('#gradG').innerHTML=grads.map(g=>`<div class="card" style="text-align:center">${U(g.img)?`<img class="p" src="${U(g.img)}" alt="">`:''}${g.num?`<div class="badge">خاتم رقم ${esc(g.num)}</div>`:''}<h3>${esc(g.name)}</h3><div class="mu">${esc(g.year||'')}</div><p>${esc(g.text||'')}</p></div>`).join('')||'<div class="empty">سيتم إضافة الخاتمين قريبًا</div>';
