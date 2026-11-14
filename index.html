@@ -39,8 +39,10 @@ section>h2:after{content:"";display:block;width:60px;height:3px;background:var(-
 .soc a{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 3px 10px #0004}
 .soc svg{width:22px;height:22px;fill:#fff}
 .loc-fab{position:fixed;right:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:25;display:none}
-.loc-fab a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#EA4335;color:#fff;box-shadow:0 3px 12px #0005;text-decoration:none;font-size:22px}
+.loc-fab a{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#e53935,#c62828);color:#fff;box-shadow:0 3px 10px #0004;text-decoration:none;transition:transform .15s,box-shadow .15s;border:2px solid #fff3}
+.loc-fab a:hover{transform:scale(1.08);box-shadow:0 4px 14px #c6282866}
 .loc-fab a:active{transform:scale(.95)}
+.loc-fab svg{width:22px;height:22px;fill:#fff;display:block}
 .loc-bar{display:none!important}
 footer{background:var(--g);color:#fff;text-align:center;padding:22px 14px calc(28px + env(safe-area-inset-bottom,0px));font-size:13px;position:relative;z-index:5}
 .ov{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto;padding:14px;padding-top:calc(14px + env(safe-area-inset-top,0px))}
@@ -70,7 +72,8 @@ input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-r
   .soc{left:8px;bottom:calc(14px + env(safe-area-inset-bottom,0px))}
   .soc a{width:42px;height:42px}
   .loc-fab{right:8px;bottom:calc(14px + env(safe-area-inset-bottom,0px))}
-  .loc-fab a{width:46px;height:46px;font-size:20px}
+  .loc-fab a{width:42px;height:42px}
+  .loc-fab svg{width:20px;height:20px}
   .grid{gap:14px;grid-template-columns:1fr}
   .card{padding:16px}
   footer{padding:24px 16px calc(36px + env(safe-area-inset-bottom,0px));font-size:13px;line-height:1.9}
@@ -157,7 +160,7 @@ function render(){
   if(locFab){
     if(U(st.location)){
       locFab.hidden=false;locFab.style.display='block';
-      locFab.innerHTML=`<a href="${U(st.location)}" target="_blank" rel="noopener" title="موقع الدار" aria-label="الموقع">📍</a>`;
+      locFab.innerHTML=`<a href="${U(st.location)}" target="_blank" rel="noopener" title="موقع الدار" aria-label="الموقع"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg></a>`;
     }else{locFab.hidden=true;locFab.style.display='none';locFab.innerHTML='';}
   }
 
