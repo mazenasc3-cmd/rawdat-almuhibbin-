@@ -416,6 +416,40 @@ document.addEventListener('click',e=>{
     log.appendChild(d);log.scrollTop=log.scrollHeight;
   };
   add('bot','السلام عليكم\nأنا مساعد دار روضة المحبين. اسألني عن التجويد، القرآن، السنة، أو آداب طالب العلم.');
+  function localChat(q){
+    const x=q.trim().toLowerCase();
+    const s=S.settings||{};
+    const about=s.about||'دار روضة المحبين لتحفيظ القرآن الكريم وتعليم أحكام التلاوة.';
+    if(/دار روضة|الدار|المكان|الموقع|عنوان|فين|أين|خدمات|تحفيظ|تجويد.*الدار/.test(x)){
+      return 'عن الدار:\n'+about+(s.location?'\\nللوصول إلى موقع الدار اضغط على زر الموقع الظاهر في الصفحة.':'');
+    }
+    if(/أحكام النون|نون ساكنة|تنوين/.test(x)){
+      return 'أحكام النون الساكنة والتنوين أربعة: الإظهار، والإدغام، والإقلاب، والإخفاء. ولكل حكم حروفه ومواضعه، ويمكنني شرح أي واحد منها بالتفصيل.';
+    }
+    if(/ميم ساكنة/.test(x)){
+      return 'أحكام الميم الساكنة ثلاثة: الإخفاء الشفوي، والإدغام الشفوي، والإظهار الشفوي.';
+    }
+    if(/مدود|المد/.test(x)){
+      return 'المد هو إطالة الصوت بحرف من حروف المد. وتختلف أحكامه بحسب السبب والموضع، مثل المد الطبيعي والمدود الفرعية.';
+    }
+    if(/مخارج|مخرج.*حرف|الحروف/.test(x)){
+      return 'مخارج الحروف خمسة مواضع كبرى: الجوف، والحلق، واللسان، والشفتان، والخيشوم. وإذا ذكرت الحرف أشرح لك مخرجه بطريقة مبسطة.';
+    }
+    if(/فضل.*قرآن|حفظ.*قرآن|حافظ.*قرآن/.test(x)){
+      return 'حفظ القرآن من الأعمال العظيمة، وجاءت نصوص كثيرة في فضل تلاوته وتعليمه. والأهم مع الحفظ: الإخلاص، والمداومة على المراجعة، والعمل بالقرآن.';
+    }
+    if(/آداب.*تلاوة|تلاوة.*آداب/.test(x)){
+      return 'من آداب تلاوة القرآن: الإخلاص، وتعظيم كلام الله، والقراءة بتدبر، وتحسين الصوت دون تكلف، والمحافظة على الطهارة عند مس المصحف.';
+    }
+    if(/وضوء|الصلاة|صيام|زكاة|حديث|سنة|فقه|حكم شرعي|فتوى/.test(x)){
+      return 'أقدر أساعدك بالمعلومات العامة الموثوقة، لكن مسائل الفتوى والأحكام التي يترتب عليها عمل أو مسؤولية يُفضّل سؤال شيخ أو عالم موثوق عنها.';
+    }
+    if(/السلام عليكم|سلام عليكم|مرحبا|أهلا|اهلا|السلام/.test(x)){
+      return 'وعليكم السلام ورحمة الله وبركاته 🌿\nأهلًا بك في دار روضة المحبين. اسألني عن القرآن والتجويد أو عن الدار.';
+    }
+    return 'أنا المساعد الداخلي للدار، وأعمل بدون خدمة خارجية أو مفتاح API. أستطيع الإجابة عن معلومات الدار، وأسئلة القرآن والتجويد العامة. جرّب مثلًا: «ما أحكام النون الساكنة؟» أو «ما آداب تلاوة القرآن؟»';
+  }
+
   document.querySelectorAll('#chatSugs [data-q]').forEach(b=>{
     b.onclick=()=>{inp.value=b.dataset.q;form.requestSubmit()};
   });
@@ -425,15 +459,13 @@ document.addEventListener('click',e=>{
     busy=true;inp.value='';add('user',msg);
     const wait=document.createElement('div');wait.className='chat-msg bot';wait.textContent='جاري التفكير...';log.appendChild(wait);log.scrollTop=log.scrollHeight;
     try{
-      const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,history:hist})});
-      const j=await r.json().catch(()=>({}));
+      const reply=localChat(msg);
       wait.remove();
-      const reply=j.reply||j.error||'تعذر الرد.';
       add('bot',reply);
       hist.push({role:'user',content:msg},{role:'assistant',content:reply});
       if(hist.length>16)hist=hist.slice(-16);
     }catch(err){
-      wait.remove();add('bot','تعذر الاتصال. تحقق من الإنترنت وحاول مرة أخرى.');
+      wait.remove();add('bot','عذرًا، لم أستطع فهم السؤال. جرّب صياغته بطريقة أخرى.');
     }
     busy=false;
   });
