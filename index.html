@@ -416,8 +416,8 @@ document.addEventListener('click',e=>{
     log.appendChild(d);log.scrollTop=log.scrollHeight;
   };
   add('bot','السلام عليكم\nأنا مساعد دار روضة المحبين. اسألني عن التجويد، القرآن، السنة، أو آداب طالب العلم.');
-  let aiEngine=null, aiLoading=null;
-  const AI_MODEL='Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
+  let aiPipe=null, aiLoading=null;
+  const AI_MODEL='onnx-community/SmolLM2-135M-Instruct-ONNX-MHA';
 
   function siteContext(){
     const st=S.settings||{};
@@ -430,38 +430,45 @@ document.addEventListener('click',e=>{
       grads.length?'الخاتمون: '+grads.map(g=>g.name+(g.year?' ('+g.year+')':'')).join('، '):'',
       events.length?'الأحداث: '+events.map(e=>e.title+(e.year?' — '+e.year:'')+(e.text?' — '+e.text:'')).join(' | '):'',
       posts.length?'الأخبار: '+posts.map(p=>p.title+(p.text?' — '+p.text:'')).join(' | '):''
-    ].filter(Boolean).join('\n');
+    ].filter(Boolean).join('\\n');
   }
 
   async function getAI(){
-    if(aiEngine)return aiEngine;
+    if(aiPipe)return aiPipe;
     if(aiLoading)return aiLoading;
     aiLoading=(async()=>{
-      if(!('gpu' in navigator)) throw new Error('WebGPU غير متاح على هذا الجهاز');
-      const mod=await import('https://esm.run/@mlc-ai/web-llm');
-      aiEngine=await mod.CreateMLCEngine(AI_MODEL,{
-        initProgressCallback:p=>{
-          const pct=p&&p.progress!=null?Math.round(p.progress*100):null;
+      const mod=await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2');
+      const {pipeline}=mod;
+      aiPipe=await pipeline('text-generation',AI_MODEL,{
+        device:'wasm',
+        dtype:'q8',
+        progress_callback:p=>{
           const el=document.querySelector('.thinking');
-          if(el)el.textContent=pct!=null?'جاري تحميل الذكاء الاصطناعي محليًا... '+pct+'%':'جاري تجهيز الذكاء الاصطناعي محليًا...';
+          if(!el)return;
+          const pct=p&&p.progress!=null?Math.round(p.progress):null;
+          el.textContent=pct!=null?'جاري تحميل الذكاء الاصطناعي محليًا... '+pct+'%':'جاري تجهيز الذكاء الاصطناعي محليًا...';
         }
       });
-      return aiEngine;
+      return aiPipe;
     })();
     try{return await aiLoading}catch(e){aiLoading=null;throw e}
   }
 
   async function askLocalAI(q){
-    const engine=await getAI();
+    const generator=await getAI();
     const messages=[
-      {role:'system',content:'أنت مساعد ذكي عربي داخل موقع دار روضة المحبين لتحفيظ القرآن الكريم. أجب بالعربية وبأسلوب واضح ومختصر، وافهم العامية المصرية والأخطاء الإملائية. أجب عن الأسئلة العامة والدينية والتعليمية من معرفتك، مثل القرآن والتجويد والحديث والسيرة والعبادات. مثال مهم: القرآن الكريم 30 جزءًا و114 سورة. لا تدّعِ أنك تبحث في الإنترنت ولا تخترع أخبارًا عن الدار. إذا سُئلت عن الدار أو أخبارها أو فعالياتها استخدم بيانات الموقع المرفقة. في الفتاوى الخاصة نبّه أن الحكم قد يختلف وأن سؤال عالم موثوق أفضل. لا تقل إنك لا تعرف لمجرد أن السؤال غير موجود في قاعدة ثابتة.'},
+      {role:'system',content:'أنت مساعد ذكي عربي داخل موقع دار روضة المحبين لتحفيظ القرآن الكريم. أجب بالعربية وبأسلوب واضح ومختصر، وافهم العامية المصرية والأخطاء الإملائية. أجب عن الأسئلة العامة والتعليمية والدينية البسيطة من معرفتك. مثال مهم: القرآن الكريم 30 جزءًا و114 سورة. إذا سُئلت عن الدار أو أخبارها أو فعالياتها استخدم بيانات الموقع المرفقة. لا تقل إنك لا تعرف لمجرد أن السؤال غير موجود في قاعدة ثابتة. في الفتاوى الخاصة نبّه أن الحكم قد يختلف وأن سؤال عالم موثوق أفضل.'},
       {role:'system',content:siteContext()}
     ];
-    const recent=hist.slice(-8);
-    for(const m of recent)messages.push({role:m.role,content:m.content});
+    for(const m of hist.slice(-6))messages.push({role:m.role,content:m.content});
     messages.push({role:'user',content:q});
-    const out=await engine.chat.completions.create({messages,temperature:0.35,max_tokens:500});
-    return out.choices?.[0]?.message?.content?.trim()||'لم أستطع تكوين إجابة الآن، جرّب السؤال مرة أخرى.';
+    const out=await generator(messages,{max_new_tokens:220,temperature:0.35,do_sample:true,top_p:0.9});
+    const text=out?.[0]?.generated_text;
+    if(Array.isArray(text)){
+      const last=text[text.length-1];
+      return (last&&last.content?last.content:'').trim()||'لم أستطع تكوين إجابة الآن، جرّب السؤال مرة أخرى.';
+    }
+    return String(text||'').trim()||'لم أستطع تكوين إجابة الآن، جرّب السؤال مرة أخرى.';
   }
 
   document.querySelectorAll('#chatSugs [data-q]').forEach(b=>{
@@ -478,7 +485,7 @@ document.addEventListener('click',e=>{
         reply=await askLocalAI(msg);
       }catch(aiErr){
         console.error(aiErr);
-        reply='الذكاء الاصطناعي المحلي يحتاج متصفحًا يدعم WebGPU. افتح الموقع على Chrome أو Edge حديث، ثم أعد المحاولة.';
+        reply='تعذر تشغيل الذكاء الاصطناعي المحلي على هذا الجهاز. تأكد من استخدام متصفح حديث يدعم WebAssembly ثم أعد المحاولة.';
       }
       wait.remove();
       add('bot',reply);
