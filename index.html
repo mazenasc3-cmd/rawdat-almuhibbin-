@@ -70,6 +70,9 @@ input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-r
   .soc a{width:40px;height:40px}
   .grid{gap:12px}
 }
+.adm-float{position:fixed;right:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;flex-direction:column;gap:6px}
+.adm-float .btn{opacity:.85;box-shadow:0 2px 8px #0003}
+.brand{cursor:default;user-select:none;-webkit-user-select:none}
 </style>
 </head>
 <body>
@@ -79,9 +82,13 @@ input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-r
   <a href="#grads" class="navl">الخاتمون</a>
   <a href="#events" class="navl">الحفلات</a>
   <a href="#news" class="navl">الأخبار</a>
-  <button class="btn sm" id="adm" hidden>لوحة الإشراف</button>
-  <button class="btn sm s" id="lg">دخول</button>
 </nav>
+<button type="button" id="adm" hidden aria-hidden="true"></button>
+<button type="button" id="lg" hidden aria-hidden="true"></button>
+<div id="admFloat" class="adm-float" hidden>
+  <button type="button" class="btn sm" id="admOpen">لوحة</button>
+  <button type="button" class="btn sm s" id="admOut" style="color:var(--tx);border-color:var(--bd)">خروج</button>
+</div>
 
 <div class="pg on" id="home">
   <header class="hero">
@@ -171,7 +178,6 @@ const CF={
   events:{t:'حفلة',f:[['title','عنوان الحفلة'],['year','التاريخ / المناسبة'],['text','وصف','ta'],['img','صورة الغلاف','img'],['link','رابط الألبوم (جوجل درايف / فيسبوك...)']]},
   posts:{t:'إعلان',f:[['title','العنوان'],['text','النص','ta'],['img','صورة','img'],['audio','تسجيل صوتي','aud']]}
 };
-$('#adm').onclick=()=>{$('#root').innerHTML='<div class="ov" id="panel"></div>';tab='graduates';panel()};
 function visTabs(){return [['graduates','الخاتمون'],['events','الحفلات'],['posts','الإعلانات'],['settings','الإعدادات']]}
 function panel(){
   const p=$('#panel');if(!p)return;
@@ -216,15 +222,28 @@ function form(coll,rec){
 }
 const rz=f=>new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const r=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*r;c.height=im.height*r;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.72))};im.onerror=no;im.src=URL.createObjectURL(f)});
 const api=async b=>{const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({who:A&&A.who,pass:A&&A.pass,...b})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(r.status===401?'بيانات الدخول غير صحيحة':(j.error||r.status));return j};
-const upd=()=>{isAdmin=!!A;$('#adm').hidden=!A;$('#lg').textContent=A?'خروج':'دخول';if(!A)$('#root').innerHTML=''};
+const upd=()=>{isAdmin=!!A;const f=$('#admFloat');if(f)f.hidden=!A;if(!A)$('#root').innerHTML=''};
 async function refresh(){try{const r=await fetch('/api/data',{cache:'no-store'}),t=await r.text();if(!r.ok||t===last)return;last=t;const j=JSON.parse(t);S.graduates=j.graduates||[];S.posts=j.posts||[];S.events=j.events||[];S.settings=j.settings||{};upd();render()}catch(e){}}
-$('#lg').onclick=()=>{if(A){A=null;sessionStorage.removeItem('rm_auth');upd();return}
+function openLogin(){
+  if(A){ $('#root').innerHTML='<div class="ov" id="panel"></div>';tab='graduates';panel(); return; }
   const m=document.createElement('div');m.className='md';
   m.innerHTML=`<div><h3 style="color:var(--g)">دخول المشرف</h3><label>كلمة السر</label><input id="lpass" type="password" autocomplete="current-password"><br><button class="btn" id="lok">دخول</button> <button class="btn s" id="lcn" style="color:var(--tx);border-color:var(--bd)">إلغاء</button></div>`;
   document.body.appendChild(m);
   m.querySelector('#lcn').onclick=()=>m.remove();
-  m.querySelector('#lok').onclick=async()=>{try{const pass=m.querySelector('#lpass').value;await api({op:'login',who:'admin',pass});A={who:'admin',pass,role:'admin'};sessionStorage.setItem('rm_auth',JSON.stringify(A));upd();m.remove();$('#adm').click()}catch(e){alert(e.message)}};
-};
+  m.querySelector('#lok').onclick=async()=>{try{const pass=m.querySelector('#lpass').value;await api({op:'login',who:'admin',pass});A={who:'admin',pass,role:'admin'};sessionStorage.setItem('rm_auth',JSON.stringify(A));upd();m.remove();$('#root').innerHTML='<div class="ov" id="panel"></div>';tab='graduates';panel()}catch(e){alert(e.message)}};
+}
+const admOpen=$('#admOpen');if(admOpen)admOpen.onclick=()=>{$('#root').innerHTML='<div class="ov" id="panel"></div>';tab='graduates';panel()};
+const admOut=$('#admOut');if(admOut)admOut.onclick=()=>{A=null;sessionStorage.removeItem('rm_auth');upd()};
+let taps=0,tapT=0;
+const brand=document.querySelector('.brand');
+if(brand)brand.addEventListener('click',()=>{
+  const n=Date.now();
+  if(n-tapT>900)taps=0;
+  tapT=n;taps++;
+  if(taps>=5){taps=0;openLogin()}
+});
+if(location.hash==='#adm'){history.replaceState(null,'',location.pathname);openLogin()}
+
 refresh();setInterval(refresh,15000);
 </script>
 </body>
