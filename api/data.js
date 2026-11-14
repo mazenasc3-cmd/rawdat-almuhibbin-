@@ -10,7 +10,7 @@ const kv = async (cmds) => {
 const parse = (a) => { const o = []; for (let i = 0; i < (a || []).length; i += 2) { try { o.push(JSON.parse(a[i + 1])); } catch (e) {} } return o; };
 const load = async () => { const r = await kv(C.map((c) => ['HGETALL', 'rm:' + c])); const d = {}; C.forEach((c, i) => (d[c] = parse(r[i]))); return d; };
 const pub = (d) => ({ graduates: d.graduates || [], posts: d.posts || [], events: d.events || [], settings: (d.settings || []).find((s) => s.id === 'site') || {} });
-module.exports = async (req, res) => {
+export default async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   try {
     if (!U || !T) return res.status(500).json({ error: 'storage-not-connected' });
