@@ -6,161 +6,225 @@
 <title>دار روضة المحبين لتحفيظ القرآن الكريم</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--g:#0d4a3e;--g2:#17705a;--gold:#b48a2c;--bg:#fbf7ec;--card:#fff;--tx:#23322d;--mu:#6b7a74;--bd:#e6dfc8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--g:#0d4a3e;--g2:#17705a;--gold:#b48a2c;--bg:#fbf7ec;--card:#fff;--tx:#23322d;--mu:#6b7a74;--bd:#e6dfc8}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--g:#46b596;--g2:#2f8f76;--gold:#d8b45e;--bg:#111c18;--card:#192924;--tx:#eaf1ee;--mu:#9bb0a8;--bd:#2a3f38}}
 :root[data-theme=dark]{--g:#46b596;--g2:#2f8f76;--gold:#d8b45e;--bg:#111c18;--card:#192924;--tx:#eaf1ee;--mu:#9bb0a8;--bd:#2a3f38}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,Tahoma,sans-serif;line-height:1.8}
+*{box-sizing:border-box}html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,Tahoma,sans-serif;line-height:1.7;overflow-x:hidden}
 h1,h2,h3{font-family:Amiri,'Traditional Arabic',serif;margin:0}
-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--g);color:#fff;display:flex;gap:6px;align-items:center;padding:8px 14px;flex-wrap:wrap}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--g);z-index:19}
-nav b{font-family:Amiri,serif;font-size:20px;margin-inline-end:auto;color:#fff}
-nav a{color:#fff;text-decoration:none;font-size:14px;padding:2px 8px;border-radius:12px}nav a:hover{background:#ffffff22}
-.btn{background:var(--gold);color:#23322d;border:0;border-radius:10px;padding:7px 16px;font:600 14px Cairo,sans-serif;cursor:pointer;text-decoration:none;display:inline-block}
-.btn.s{background:transparent;border:1px solid var(--bd);color:var(--tx)}.btn.d{background:#b3402f;color:#fff}.btn.sm{padding:3px 10px;font-size:12px}
-.hero{background:linear-gradient(160deg,var(--g),var(--g2));color:#fff;text-align:center;padding:60px 18px 70px;position:relative;overflow:hidden}
-.hero:after{content:"";position:absolute;inset:auto 0 0;height:6px;background:var(--gold)}
-.hero h1{font-size:clamp(32px,6vw,54px)}.hero p{max-width:640px;margin:10px auto;opacity:.95}
-.ay{font-family:Amiri,serif;font-size:24px;color:#f0dca0;margin-top:14px}
-section{max-width:1080px;margin:auto;padding:38px 16px}
-section>h2{color:var(--g);font-size:32px;text-align:center;margin-bottom:6px}
-section>h2:after{content:"";display:block;width:70px;height:3px;background:var(--gold);margin:6px auto 0;border-radius:3px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin-top:22px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;box-shadow:0 2px 8px #0000000d}
-.card img.p{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--bd)}
-.card h3{color:var(--g);font-size:22px;margin-top:8px}.mu{color:var(--mu);font-size:14px}
-.bar{height:8px;background:var(--bd);border-radius:6px;overflow:hidden;margin:4px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--g2),var(--gold))}
-.empty{text-align:center;color:var(--mu);padding:30px;grid-column:1/-1}
-.st{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-top:1px dashed var(--bd);font-size:14px}
-details summary{cursor:pointer;color:var(--g);font-weight:600;margin:8px 0}
+nav{position:sticky;top:0;z-index:30;background:var(--g);color:#fff;display:flex;align-items:center;gap:4px;padding:8px 10px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav .brand{display:flex;align-items:center;gap:8px;margin-inline-end:auto;flex-shrink:0}
+nav b{font-family:Amiri,serif;font-size:17px;white-space:nowrap}
+nav a{color:#fff;text-decoration:none;font-size:13px;padding:6px 10px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+nav a:hover,nav a.on{background:#ffffff22}
+nav .btn{flex-shrink:0}
+.btn{background:var(--gold);color:#23322d;border:0;border-radius:10px;padding:8px 14px;font:600 13px Cairo,sans-serif;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.s{background:transparent;border:1px solid #fff6;color:#fff}.btn.d{background:#b3402f;color:#fff}.btn.sm{padding:5px 10px;font-size:12px}
+.hero{background:linear-gradient(160deg,var(--g),var(--g2));color:#fff;text-align:center;padding:36px 14px 44px;position:relative}
+.hero:after{content:"";position:absolute;inset:auto 0 0;height:5px;background:var(--gold)}
+.hero h1{font-size:clamp(26px,7vw,46px)}.hero p{max-width:560px;margin:8px auto;opacity:.95;font-size:15px}
+.ay{font-family:Amiri,serif;font-size:clamp(18px,4vw,24px);color:#f0dca0;margin-top:10px}
+section{max-width:1000px;margin:auto;padding:28px 14px}
+section>h2{color:var(--g);font-size:clamp(24px,5vw,30px);text-align:center;margin-bottom:6px}
+section>h2:after{content:"";display:block;width:60px;height:3px;background:var(--gold);margin:8px auto 0;border-radius:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:14px;margin-top:18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;box-shadow:0 2px 8px #0000000a}
+.card img.p,.card img.cover{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:var(--bd);display:block}
+.card img.cover{aspect-ratio:16/10}
+.card h3{color:var(--g);font-size:19px;margin-top:8px}.mu{color:var(--mu);font-size:13px}
+.empty{text-align:center;color:var(--mu);padding:24px;grid-column:1/-1}
 .post img,.post audio{width:100%;border-radius:12px;margin-top:8px}
-.soc{position:fixed;left:12px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;z-index:30}
-.soc a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 3px 10px #0004;transition:.2s}.soc a:hover{transform:scale(1.12)}
-.soc svg{width:24px;height:24px;fill:#fff}
-footer{background:var(--g);color:#fff;text-align:center;padding:22px 12px;font-size:14px}
-.ov{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto;padding:calc(12px + env(safe-area-inset-top,0px)) 14px 30px}
-.md{position:fixed;inset:0;background:#0007;z-index:60;display:grid;place-items:center;padding:14px}
-.md>div{background:var(--card);border-radius:16px;padding:18px;width:min(480px,100%);max-height:90vh;overflow:auto}
+.soc{position:fixed;left:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:25}
+.soc a{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 3px 10px #0004}
+.soc svg{width:22px;height:22px;fill:#fff}
+.loc-bar{text-align:center;padding:0 14px 18px}
+.loc-bar a{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bd);border-radius:999px;padding:10px 18px;text-decoration:none;color:var(--tx);font-size:14px;font-weight:600;box-shadow:0 2px 8px #0000000a}
+.loc-bar a:hover{border-color:var(--gold)}
+footer{background:var(--g);color:#fff;text-align:center;padding:20px 12px;font-size:13px}
+.ov{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto;padding:14px;padding-top:calc(14px + env(safe-area-inset-top,0px))}
+.md{position:fixed;inset:0;background:#0007;z-index:60;display:grid;place-items:center;padding:12px}
+.md>div{background:var(--card);border-radius:14px;padding:16px;width:min(460px,100%);max-height:88vh;overflow:auto}
 label{display:block;font-size:13px;margin-top:10px;color:var(--mu)}
-input,select,textarea{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
-.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.tabs .btn{background:var(--card);border:1px solid var(--bd);color:var(--tx)}.tabs .btn.on{background:var(--g);color:#fff}
-.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px;border-bottom:1px solid var(--bd);text-align:right}
-.pg{display:none}.pg.on{display:block;animation:f .35s}@keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
-nav a.on{background:var(--gold);color:#23322d}
-.qk a{text-decoration:none;color:inherit;text-align:center;display:block}.qk a:hover{border-color:var(--gold)}.qk h3{font-size:24px}
-.ab{position:relative;min-height:380px;display:grid;place-items:center;margin-top:20px;overflow:hidden}.ab img{position:absolute;inset:0;margin:auto;height:100%;max-width:100%;object-fit:contain;opacity:.4;mix-blend-mode:multiply;pointer-events:none}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .ab img{filter:invert(.92);mix-blend-mode:screen;opacity:.18}}
-.ab p{position:relative;z-index:1;max-width:620px;margin:0;text-align:center;font-size:19px;font-weight:600;color:var(--tx);padding:20px}
-.lgw{width:44px;height:44px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid var(--gold);display:inline-block}.lgw img{width:100%;height:100%;object-fit:cover;transform:scale(1.9)}
-.lgw.big{width:130px;height:130px;border-width:4px;margin:0 auto 12px;display:block}
+input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.tabs .btn{background:var(--card);border:1px solid var(--bd);color:var(--tx)}.tabs .btn.on{background:var(--g);color:#fff}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:7px;border-bottom:1px solid var(--bd);text-align:right}
+.pg{display:none}.pg.on{display:block}
+.lgw{width:40px;height:40px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid var(--gold);display:inline-block;flex-shrink:0}
+.lgw img{width:100%;height:100%;object-fit:cover;transform:scale(1.9)}
+.lgw.big{width:110px;height:110px;border-width:3px;margin:0 auto 10px;display:block}
+.qk a{text-decoration:none;color:inherit;text-align:center;display:block}.qk a:hover{border-color:var(--gold)}.qk h3{font-size:20px}
+.ab{position:relative;min-height:220px;display:grid;place-items:center;margin-top:14px;overflow:hidden;border-radius:14px}
+.ab img{position:absolute;inset:0;margin:auto;height:100%;max-width:100%;object-fit:contain;opacity:.35;mix-blend-mode:multiply;pointer-events:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .ab img{filter:invert(.92);mix-blend-mode:screen;opacity:.16}}
+.ab p{position:relative;z-index:1;max-width:580px;margin:0;text-align:center;font-size:16px;font-weight:600;color:var(--tx);padding:16px}
+.badge{display:inline-block;background:var(--gold);color:#23322d;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;margin-bottom:4px}
+@media(max-width:480px){
+  nav{padding:7px 8px;gap:2px}
+  nav b{font-size:15px}
+  nav a{font-size:12px;padding:5px 8px}
+  section{padding:22px 12px}
+  .hero{padding:28px 12px 36px}
+  .soc{left:8px;bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  .soc a{width:40px;height:40px}
+  .grid{gap:12px}
+}
 </style>
 </head>
 <body>
-<nav><span class="lgw"><img src="assets/logo.jpg" alt="شعار الدار"></span><b>دار روضة المحبين</b><a href="#home">الرئيسية</a><a href="#about">عن الدار</a><a href="#grads">الخاتمون</a><a href="#groups">المجموعات</a><a href="#news">الأخبار</a><button class="btn sm" id="adm" hidden>لوحة الإشراف</button><button class="btn sm s" id="lg" style="color:#fff;border-color:#fff8">دخول</button></nav>
-<div class="pg on" id="home"><header class="hero"><span class="lgw big"><img src="assets/logo.jpg" alt=""></span><h1>دار روضة المحبين</h1><p>لتحفيظ القرآن الكريم وتجويده — تحت إدارة الشيخ مصطفى محمود الشال</p><div class="ay">﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾</div></header>
-<section><div class="grid qk"><div class="card"><a href="#about"><h3>📖 عن الدار</h3><div class="mu">تعرّف علينا ورسالتنا</div></a></div><div class="card"><a href="#grads"><h3>🎓 الخاتمون</h3><div class="mu">فرحتنا بخاتمي كتاب الله</div></a></div><div class="card"><a href="#groups"><h3>👥 المجموعات</h3><div class="mu">المعلمون والطلاب وجروبات الواتساب</div></a></div><div class="card"><a href="#news"><h3>📢 الأخبار</h3><div class="mu">آخر الإعلانات والتحديثات</div></a></div></div></section>
-<section><h2>أحدث خاتم</h2><div id="homeGrad"><div class="empty">جاري التحميل...</div></div></section>
-<section><h2>آخر المستجدات</h2><div class="grid" id="homeNews"></div></section></div>
-<section class="pg" id="about"><h2>عن الدار</h2><div class="ab"><img src="assets/art.jpg" alt="شعار روضة المحبين"><p id="aboutTx" class="mu">دار لتحفيظ كتاب الله وتعليم أحكام التلاوة، بإشراف نخبة من المعلمين والمعلمات، وبمتابعة دقيقة لكل طالب.</p></div></section>
+<nav>
+  <span class="brand"><span class="lgw"><img src="assets/logo.jpg" alt=""></span><b>دار روضة المحبين</b></span>
+  <a href="#home" class="navl">الرئيسية</a>
+  <a href="#grads" class="navl">الخاتمون</a>
+  <a href="#events" class="navl">الحفلات</a>
+  <a href="#news" class="navl">الأخبار</a>
+  <button class="btn sm" id="adm" hidden>لوحة الإشراف</button>
+  <button class="btn sm s" id="lg">دخول</button>
+</nav>
+
+<div class="pg on" id="home">
+  <header class="hero">
+    <span class="lgw big"><img src="assets/logo.jpg" alt=""></span>
+    <h1>دار روضة المحبين</h1>
+    <p>لتحفيظ القرآن الكريم وتجويده — تحت إدارة الشيخ مصطفى محمود الشال</p>
+    <div class="ay">﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾</div>
+  </header>
+  <section>
+    <div class="grid qk">
+      <div class="card"><a href="#grads"><h3>🎓 الخاتمون</h3><div class="mu">فرحتنا بخاتمي كتاب الله</div></a></div>
+      <div class="card"><a href="#events"><h3>🎉 الحفلات</h3><div class="mu">حفلات ومسابقات الدار</div></a></div>
+      <div class="card"><a href="#news"><h3>📢 الأخبار</h3><div class="mu">آخر الإعلانات والتحديثات</div></a></div>
+    </div>
+  </section>
+  <section>
+    <h2>عن الدار</h2>
+    <div class="ab"><img src="assets/art.jpg" alt=""><p id="aboutTx">دار لتحفيظ كتاب الله وتعليم أحكام التلاوة، بإشراف نخبة من المعلمين والمعلمات، وبمتابعة دقيقة لكل طالب.</p></div>
+  </section>
+  <section>
+    <h2>أحدث خاتم</h2>
+    <div id="homeGrad"><div class="empty">جاري التحميل...</div></div>
+  </section>
+  <section>
+    <h2>آخر المستجدات</h2>
+    <div class="grid" id="homeNews"></div>
+  </section>
+</div>
+
 <section class="pg" id="grads"><h2>الخاتمون والخاتمات</h2><div class="grid" id="gradG"></div></section>
-<section class="pg" id="groups"><h2>مجموعات الدار</h2><div class="grid" id="grpG"></div></section>
+<section class="pg" id="events"><h2>الحفلات والمسابقات</h2><div class="grid" id="evtG"></div></section>
 <section class="pg" id="news"><h2>الإعلانات والتحديثات</h2><div class="grid" id="newsG"></div></section>
-<footer><span class="lgw"><img src="assets/logo.jpg" alt=""></span><br>جميع الحقوق محفوظة © دار روضة المحبين — إدارة الشيخ مصطفى محمود الشال<br><span style="opacity:.85;font-size:13px;margin-top:6px;display:inline-block">Developed by .ENG\Mazen Medhat</span></footer>
+
+<div class="loc-bar" id="locBar" hidden></div>
+<footer>
+  <span class="lgw"><img src="assets/logo.jpg" alt=""></span><br>
+  جميع الحقوق محفوظة © دار روضة المحبين — إدارة الشيخ مصطفى محمود الشال<br>
+  <span style="opacity:.85;font-size:12px;margin-top:6px;display:inline-block">Developed by .ENG\Mazen Medhat</span>
+</footer>
 <div class="soc" id="soc"></div>
 <div id="root"></div>
+
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&','<':'<','>':'>','"':'"',"'":'&#39;'}[c]));
 const U=u=>/^(https?:\/\/|data:image\/)/.test(u||'')?esc(u):'';
-const S={students:[],groups:[],graduates:[],posts:[],teachers:[],users:[],settings:{}};
+const S={graduates:[],posts:[],events:[],settings:{}};
 let A=null;try{A=JSON.parse(sessionStorage.getItem('rm_auth')||'null')}catch(e){}
-let isAdmin=false,myTeacher=null,tab='students',last='';
-const IC={whatsapp:['#25D366','M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z'],facebook:['#1877F2','M14 8V6.5c0-.7.2-1 1-1h2V2h-3c-3 0-4 1.8-4 4v2H8v3.5h2V22h4v-10.5h2.700L17.200 8z'],instagram:['#E1306C','M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3.500a4.500 4.500 0 1 1 0 9 4.500 4.500 0 0 1 0-9zm0 2a2.500 2.500 0 1 0 0 5 2.500 2.500 0 0 0 0-5zM17.500 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z']};
-const prog=s=>Math.min(30,Math.max(0,+s.juz||0));
-const gname=id=>(S.groups.find(g=>g.id===id)||{}).name||'—';
-function render(){
- const st=S.settings;if(st.about)$('#aboutTx').textContent=st.about;
- $('#soc').innerHTML=Object.keys(IC).map(k=>U(st[k])?`<a href="${U(st[k])}" target="_blank" rel="noopener" style="background:${IC[k][0]}" aria-label="${k}"><svg viewBox="0 0 24 24"><path d="${IC[k][1]}"/></svg></a>`:'').join('');
- const gTs=g=>{if(g.ts)return +g.ts;if(g.date){const t=new Date(g.date+'T12:00:00').getTime();return isNaN(t)?0:t;}return 0;};
- const gradsSorted=[...S.graduates].sort((a,b)=>gTs(b)-gTs(a));
- $('#gradG').innerHTML=gradsSorted.map(g=>`<div class="card" style="text-align:center">${U(g.img)?`<img class="p" src="${U(g.img)}" alt="">`:''}<h3>${esc(g.name)}</h3><div class="mu">${esc(g.year)}</div><p>${esc(g.text)}</p></div>`).join('')||'<div class="empty">سيتم إضافة الخاتمين قريبًا</div>';
- const lg=gradsSorted[0];
- const homeGrad=$('#homeGrad');
- if(homeGrad){homeGrad.innerHTML=lg?`<div class="card" style="text-align:center;max-width:320px;margin:0 auto;border:2px solid var(--gold)">${U(lg.img)?`<img class="p" src="${U(lg.img)}" alt="">`:''}<div class="mu" style="color:var(--gold);font-weight:700;margin-top:6px">أحدث خاتم</div><h3>${esc(lg.name)}</h3><div class="mu">${esc(lg.year)}</div><p>${esc(lg.text)}</p><a class="btn sm" href="#grads" style="margin-top:8px;display:inline-block">كل الخاتمين</a></div>`:'<div class="empty">سيتم إضافة الخاتمين قريبًا</div>';}
- $('#grpG').innerHTML=S.groups.map(g=>{const ms=S.students.filter(s=>s.groupId===g.id);return`<div class="card"><h3>${esc(g.name)}</h3><div class="mu">المعلم/ـة: ${esc(g.teacher)} · عدد الطلاب: ${ms.length}</div><p class="mu">${esc(g.desc)}</p>
- <details><summary>أسماء الطلاب</summary>${ms.map(s=>`<div class="st"><span>${esc(s.name)}</span><span class="mu">${prog(s)} جزء</span></div>`).join('')||'<div class="mu">لا يوجد طلاب بعد</div>'}</details>
- ${U(g.wa)?`<a class="btn" href="${U(g.wa)}" target="_blank" rel="noopener">انضم لجروب الواتساب</a>`:''}</div>`}).join('')||'<div class="empty">لم تُضف مجموعات بعد</div>';
- const pc=p=>`<div class="card post"><h3>${esc(p.title)}</h3><div class="mu">${p.ts?new Date(p.ts).toLocaleDateString('ar-EG'):''}</div><p>${esc(p.text)}</p>${U(p.img)?`<img src="${U(p.img)}" alt="">`:''}${U(p.audio)?`<audio controls src="${U(p.audio)}"></audio>`:''}</div>`,sp=[...S.posts].sort((a,b)=>(b.ts||0)-(a.ts||0)),em='<div class="empty">لا توجد إعلانات حاليًا</div>';
- $('#newsG').innerHTML=sp.map(pc).join('')||em;$('#homeNews').innerHTML=sp.slice(0,3).map(pc).join('')||em;
- if($('#panel'))panel();
-}
-function route(){const h=(location.hash||'#home').slice(1),ok=['home','about','grads','groups','news'].includes(h)?h:'home';
- document.querySelectorAll('.pg').forEach(e=>e.classList.toggle('on',e.id===ok));
- document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+ok));scrollTo(0,0)}
-addEventListener('hashchange',route);route();
-const CF={
- students:{t:'طالب',f:[['name','اسم الطالب'],['groupId','المجموعة','grp'],['juz','عدد الأجزاء المحفوظة (0-30)','num'],['cur','وصل إلى (سورة/جزء)'],['notes','ملاحظات المعلم','ta']]},
- groups:{t:'مجموعة',f:[['name','اسم المجموعة'],['teacher','اسم المعلم/ـة'],['wa','رابط جروب الواتساب'],['desc','وصف','ta']]},
- graduates:{t:'خاتم/ـة',f:[['name','الاسم'],['year','التاريخ بالعربي (للعرض)'],['date','تاريخ الختم (يوم/شهر/سنة)','date'],['text','كلمة','ta'],['img','الصورة','img']]},
- posts:{t:'إعلان',f:[['title','العنوان'],['text','النص','ta'],['img','صورة','img'],['audio','تسجيل صوتي','aud']]},
- teachers:{t:'معلم',f:[['name','اسم المعلم/ـة'],['groupId','المجموعة المشرف عليها','grp'],['pin','الرقم السري للمعلم (اتركه فارغًا للإبقاء على القديم)','pw']]}
+let isAdmin=false,tab='graduates',last='';
+const IC={
+  whatsapp:['#25D366','M12 2a10 10 0 0 0-8.6 15L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z'],
+  facebook:['#1877F2','M14 8V6.5c0-.7.2-1 1-1h2V2h-3c-3 0-4 1.8-4 4v2H8v3.5h2V22h4v-10.5h2.700L17.200 8z'],
+  instagram:['#E1306C','M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3.500a4.500 4.500 0 1 1 0 9 4.500 4.500 0 0 1 0-9zm0 2a2.500 2.500 0 1 0 0 5 2.500 2.500 0 0 0 0-5zM17.500 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z']
 };
-$('#adm').onclick=()=>{$('#root').innerHTML='<div class="ov" id="panel"></div>';panel()};
-function visTabs(){return isAdmin?[['students','الطلاب'],['groups','المجموعات'],['graduates','الخاتمون'],['posts','الإعلانات'],['teachers','المعلمون'],['settings','الإعدادات']]:[['students','طلاب مجموعتي']]}
+function render(){
+  const st=S.settings||{};
+  if(st.about)$('#aboutTx').textContent=st.about;
+  $('#soc').innerHTML=Object.keys(IC).map(k=>U(st[k])?`<a href="${U(st[k])}" target="_blank" rel="noopener" style="background:${IC[k][0]}" aria-label="${k}"><svg viewBox="0 0 24 24"><path d="${IC[k][1]}"/></svg></a>`:'').join('');
+  const loc=$('#locBar');
+  if(U(st.location)){loc.hidden=false;loc.innerHTML=`<a href="${U(st.location)}" target="_blank" rel="noopener">📍 موقع الدار على الخريطة</a>`;}
+  else{loc.hidden=true;loc.innerHTML='';}
+
+  const grads=[...S.graduates].sort((a,b)=>(+b.num||0)-(+a.num||0));
+  $('#gradG').innerHTML=grads.map(g=>`<div class="card" style="text-align:center">${U(g.img)?`<img class="p" src="${U(g.img)}" alt="">`:''}${g.num?`<div class="badge">خاتم رقم ${esc(g.num)}</div>`:''}<h3>${esc(g.name)}</h3><div class="mu">${esc(g.year||'')}</div><p>${esc(g.text||'')}</p></div>`).join('')||'<div class="empty">سيتم إضافة الخاتمين قريبًا</div>';
+  const lg=grads[0];
+  const homeGrad=$('#homeGrad');
+  if(homeGrad)homeGrad.innerHTML=lg?`<div class="card" style="text-align:center;max-width:300px;margin:0 auto;border:2px solid var(--gold)">${U(lg.img)?`<img class="p" src="${U(lg.img)}" alt="">`:''}<div class="mu" style="color:var(--gold);font-weight:700;margin-top:6px">أحدث خاتم${lg.num?' · رقم '+esc(lg.num):''}</div><h3>${esc(lg.name)}</h3><div class="mu">${esc(lg.year||'')}</div><p>${esc(lg.text||'')}</p><a class="btn sm" href="#grads" style="margin-top:8px">كل الخاتمين</a></div>`:'<div class="empty">سيتم إضافة الخاتمين قريبًا</div>';
+
+  const evts=[...S.events].sort((a,b)=>(b.ts||0)-(a.ts||0));
+  $('#evtG').innerHTML=evts.map(e=>`<div class="card">${U(e.img)?`<img class="cover" src="${U(e.img)}" alt="">`:''}<h3>${esc(e.title)}</h3><div class="mu">${esc(e.year||'')}</div><p>${esc(e.text||'')}</p>${U(e.link)?`<a class="btn sm" href="${U(e.link)}" target="_blank" rel="noopener" style="margin-top:8px">عرض الألبوم</a>`:''}</div>`).join('')||'<div class="empty">لا توجد حفلات بعد</div>';
+
+  const pc=p=>`<div class="card post"><h3>${esc(p.title)}</h3><div class="mu">${p.ts?new Date(p.ts).toLocaleDateString('ar-EG'):''}</div><p>${esc(p.text||'')}</p>${U(p.img)?`<img src="${U(p.img)}" alt="">`:''}${U(p.audio)?`<audio controls src="${U(p.audio)}"></audio>`:''}</div>`;
+  const sp=[...S.posts].sort((a,b)=>(b.ts||0)-(a.ts||0)),em='<div class="empty">لا توجد إعلانات حاليًا</div>';
+  $('#newsG').innerHTML=sp.map(pc).join('')||em;
+  $('#homeNews').innerHTML=sp.slice(0,3).map(pc).join('')||em;
+  if($('#panel'))panel();
+}
+function route(){
+  const h=(location.hash||'#home').slice(1),ok=['home','grads','events','news'].includes(h)?h:'home';
+  document.querySelectorAll('.pg').forEach(e=>e.classList.toggle('on',e.id===ok));
+  document.querySelectorAll('.navl').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+ok));
+  scrollTo(0,0);
+}
+addEventListener('hashchange',route);route();
+
+const CF={
+  graduates:{t:'خاتم/ـة',f:[['num','رقم الخاتم','num'],['name','الاسم'],['year','التاريخ بالعربي'],['text','كلمة','ta'],['img','الصورة','img']]},
+  events:{t:'حفلة',f:[['title','عنوان الحفلة'],['year','التاريخ / المناسبة'],['text','وصف','ta'],['img','صورة الغلاف','img'],['link','رابط الألبوم (جوجل درايف / فيسبوك...)']]},
+  posts:{t:'إعلان',f:[['title','العنوان'],['text','النص','ta'],['img','صورة','img'],['audio','تسجيل صوتي','aud']]}
+};
+$('#adm').onclick=()=>{$('#root').innerHTML='<div class="ov" id="panel"></div>';tab='graduates';panel()};
+function visTabs(){return [['graduates','الخاتمون'],['events','الحفلات'],['posts','الإعلانات'],['settings','الإعدادات']]}
 function panel(){
- const p=$('#panel');if(!p)return;
- let h=`<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="color:var(--g)">لوحة الإشراف ${isAdmin?'(مدير)':'(معلم)'}</h2><button class="btn s" id="x">إغلاق ✕</button></div><div class="tabs">${visTabs().map(([k,l])=>`<button class="btn ${k===tab?'on':''}" data-t="${k}">${l}</button>`).join('')}</div>`;
- if(tab==='settings'){const s=S.settings;h+=`<div class="card" style="max-width:520px">${[['about','نبذة عن الدار','ta'],['whatsapp','رابط واتساب الدار'],['facebook','رابط صفحة فيسبوك'],['instagram','رابط انستجرام']].map(([k,l,t])=>`<label>${l}</label>${t?`<textarea data-s="${k}">${esc(s[k])}</textarea>`:`<input dir="ltr" data-s="${k}" value="${esc(s[k])}">`}`).join('')}<br><button class="btn" id="ss">حفظ</button></div>`;}
- else{
-  const c=CF[tab];let rows=S[tab];
-  if(tab==='students'&&!isAdmin)rows=rows.filter(s=>myTeacher&&s.groupId===myTeacher.groupId);
-  const cols=c.f.filter(f=>!['ta','img','aud','pw','date'].includes(f[2]));
-  h+=`<button class="btn" data-add>＋ إضافة ${c.t}</button><div class="tw card" style="margin-top:10px"><table><tr>${cols.map(f=>`<th>${f[1]}</th>`).join('')}<th></th></tr>${rows.map(r=>`<tr>${cols.map(f=>`<td>${f[2]==='grp'?esc(gname(r[f[0]])):esc(r[f[0]])}</td>`).join('')}<td><button class="btn s sm" data-e="${r.id}">تعديل</button> <button class="btn d sm" data-d="${r.id}">حذف</button></td></tr>`).join('')||`<tr><td colspan="9" class="mu">لا توجد بيانات</td></tr>`}</table></div>`;
-  if(tab==='students'&&!isAdmin&&!myTeacher)h+='<p class="mu">لم يتم ربط حسابك بمجموعة بعد. تواصل مع المدير.</p>';
- }
- p.innerHTML=h;p.querySelector('#x').onclick=()=>{$('#root').innerHTML=''};
- p.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;panel()});
- const a=p.querySelector('[data-add]');if(a)a.onclick=()=>form(tab);
- p.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>form(tab,S[tab].find(r=>r.id===b.dataset.e)));
- p.querySelectorAll('[data-d]').forEach(b=>b.onclick=async()=>{if(confirm('تأكيد الحذف؟'))try{await api({op:'del',coll:tab,id:b.dataset.d});await refresh()}catch(e){alert('غير مسموح: '+e.message)}});
- const ss=p.querySelector('#ss');if(ss)ss.onclick=async()=>{const d={};p.querySelectorAll('[data-s]').forEach(i=>d[i.dataset.s]=i.value.trim());try{await api({op:'put',coll:'settings',item:d});await refresh();alert('تم الحفظ ✓')}catch(e){alert('غير مسموح: '+e.message)}};
+  const p=$('#panel');if(!p)return;
+  let h=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="color:var(--g);font-size:22px">لوحة الإشراف</h2><button class="btn s" id="x" style="color:var(--tx);border-color:var(--bd)">إغلاق ✕</button></div><div class="tabs">${visTabs().map(([k,l])=>`<button class="btn ${k===tab?'on':''}" data-t="${k}">${l}</button>`).join('')}</div>`;
+  if(tab==='settings'){
+    const s=S.settings||{};
+    h+=`<div class="card" style="max-width:520px">${[['about','نبذة عن الدار','ta'],['whatsapp','رابط واتساب'],['facebook','رابط فيسبوك'],['instagram','رابط انستجرام'],['location','رابط الموقع على الخريطة (جوجل مابس)']].map(([k,l,t])=>`<label>${l}</label>${t?`<textarea data-s="${k}">${esc(s[k]||'')}</textarea>`:`<input dir="ltr" data-s="${k}" value="${esc(s[k]||'')}" autocomplete="off">`}`).join('')}<br><button class="btn" id="ss">حفظ</button></div>`;
+  } else {
+    const c=CF[tab];let rows=S[tab]||[];
+    const cols=c.f.filter(f=>!['ta','img','aud'].includes(f[2]));
+    h+=`<button class="btn" data-add>＋ إضافة ${c.t}</button><div class="tw card" style="margin-top:10px"><table><tr>${cols.map(f=>`<th>${f[1]}</th>`).join('')}<th></th></tr>${rows.map(r=>`<tr>${cols.map(f=>`<td>${esc(r[f[0]])}</td>`).join('')}<td><button class="btn s sm" data-e="${r.id}">تعديل</button> <button class="btn d sm" data-d="${r.id}">حذف</button></td></tr>`).join('')||`<tr><td colspan="9" class="mu">لا توجد بيانات</td></tr>`}</table></div>`;
+  }
+  p.innerHTML=h;p.querySelector('#x').onclick=()=>{$('#root').innerHTML=''};
+  p.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;panel()});
+  const a=p.querySelector('[data-add]');if(a)a.onclick=()=>form(tab);
+  p.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>form(tab,(S[tab]||[]).find(r=>r.id===b.dataset.e)));
+  p.querySelectorAll('[data-d]').forEach(b=>b.onclick=async()=>{if(confirm('تأكيد الحذف؟'))try{await api({op:'del',coll:tab,id:b.dataset.d});await refresh()}catch(e){alert('غير مسموح: '+e.message)}});
+  const ss=p.querySelector('#ss');if(ss)ss.onclick=async()=>{const d={};p.querySelectorAll('[data-s]').forEach(i=>d[i.dataset.s]=i.value.trim());try{await api({op:'put',coll:'settings',item:d});await refresh();alert('تم الحفظ ✓')}catch(e){alert('غير مسموح: '+e.message)}};
 }
 function form(coll,rec){
- const c=CF[coll],r=rec||{};if(coll==='students'&&!isAdmin&&!rec&&myTeacher)r.groupId=myTeacher.groupId;
- const m=document.createElement('div');m.className='md';m.setAttribute('data-form',coll+'-'+(rec&&rec.id||'new')+'-'+Date.now());
- const fl=c.f.map(([k,l,t])=>{let i;
-  if(t==='ta')i=`<textarea name="${k}" rows="3" autocomplete="off">${esc(r[k])}</textarea>`;
-  else if(t==='num')i=`<input name="${k}" type="number" min="0" max="30" value="${esc(r[k]||0)}" autocomplete="off">`;
-  else if(t==='grp')i=`<select name="${k}" ${!isAdmin?'disabled':''}>${S.groups.map(g=>`<option value="${g.id}" ${g.id===r[k]?'selected':''}>${esc(g.name)}</option>`).join('')}</select>`;
-  else if(t==='img'||t==='aud')i=`<input name="${k}" dir="ltr" placeholder="رابط" value="${esc(r[k])}" autocomplete="off">${t==='img'?`<input type="file" data-f="${k}" accept="image/*" style="margin-top:4px">`:''}`;
-  else if(t==='pw')i=`<input name="${k}" value="" autocomplete="new-password">`;
-  else if(t==='date'){let dv='';if(r.date)dv=String(r.date).slice(0,10);else if(r.ts){const d=new Date(+r.ts);if(!isNaN(d))dv=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}i=`<input name="${k}" id="fld_${k}" type="date" dir="ltr" autocomplete="off" value="${esc(dv)}">`;}
-  else i=`<input name="${k}" value="${esc(r[k])}" autocomplete="off">`;
-  return`<label>${l}</label>${i}`}).join('');
- m.innerHTML=`<div><h3 style="color:var(--g)">${rec?'تعديل':'إضافة'} ${c.t}</h3>${fl}<br><button class="btn" id="sv">حفظ</button> <button class="btn s" id="cn">إلغاء</button></div>`;
- document.body.appendChild(m);
- m.querySelector('#cn').onclick=()=>m.remove();
- m.querySelector('#sv').onclick=async()=>{
-  const d={};try{
-  for(const [k,,t] of c.f){const el=m.querySelector(`[name="${k}"]`);let v=el.value;
-   const fi=m.querySelector(`[data-f="${k}"]`);if(fi&&fi.files[0]){v=await rz(fi.files[0])}
-   d[k]=t==='num'?Math.min(30,Math.max(0,+v||0)):v.trim()}
-  if(coll==='posts'&&!rec)d.ts=Date.now();
-  if(coll==='graduates'){
-    if(d.date){const t=new Date(d.date+'T12:00:00').getTime();d.ts=isNaN(t)?Date.now():t;}
-    else { d.date=''; d.ts = rec && rec.ts ? +rec.ts : Date.now(); }
-  }
-  await api({op:'put',coll,item:{...(rec||{}),...d}});await refresh();
-  m.remove()}catch(e){alert('تعذر الحفظ: '+(e.message||e.code))}};
+  const c=CF[coll],r=rec||{};
+  const m=document.createElement('div');m.className='md';
+  const fl=c.f.map(([k,l,t])=>{let i;
+    if(t==='ta')i=`<textarea name="${k}" rows="3" autocomplete="off">${esc(r[k]||'')}</textarea>`;
+    else if(t==='num')i=`<input name="${k}" type="number" min="1" value="${esc(r[k]||'')}" autocomplete="off">`;
+    else if(t==='img'||t==='aud')i=`<input name="${k}" dir="ltr" placeholder="رابط" value="${esc(r[k]||'')}" autocomplete="off">${t==='img'?`<input type="file" data-f="${k}" accept="image/*" style="margin-top:4px">`:''}`;
+    else i=`<input name="${k}" value="${esc(r[k]||'')}" autocomplete="off" ${k==='link'||k==='img'?'dir=ltr':''}>`;
+    return`<label>${l}</label>${i}`}).join('');
+  m.innerHTML=`<div><h3 style="color:var(--g)">${rec?'تعديل':'إضافة'} ${c.t}</h3>${fl}<br><button class="btn" id="sv">حفظ</button> <button class="btn s" id="cn" style="color:var(--tx);border-color:var(--bd)">إلغاء</button></div>`;
+  document.body.appendChild(m);
+  m.querySelector('#cn').onclick=()=>m.remove();
+  m.querySelector('#sv').onclick=async()=>{
+    const d={};try{
+      for(const [k,,t] of c.f){const el=m.querySelector(`[name="${k}"]`);let v=el.value;
+        const fi=m.querySelector(`[data-f="${k}"]`);if(fi&&fi.files[0])v=await rz(fi.files[0]);
+        d[k]=t==='num'?(+v||0):v.trim()}
+      if(coll==='posts'&&!rec)d.ts=Date.now();
+      if(coll==='events'&&!rec)d.ts=Date.now();
+      await api({op:'put',coll,item:{...(rec||{}),...d}});await refresh();m.remove();
+    }catch(e){alert('تعذر الحفظ: '+(e.message||e.code))}
+  };
 }
-const rz=f=>new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const r=Math.min(1,800/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*r;c.height=im.height*r;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.7))};im.onerror=no;im.src=URL.createObjectURL(f)});
+const rz=f=>new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const r=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*r;c.height=im.height*r;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.72))};im.onerror=no;im.src=URL.createObjectURL(f)});
 const api=async b=>{const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({who:A&&A.who,pass:A&&A.pass,...b})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(r.status===401?'بيانات الدخول غير صحيحة':(j.error||r.status));return j};
-const upd=()=>{isAdmin=!!A&&A.role==='admin';myTeacher=A&&A.role==='teacher'?{groupId:A.groupId}:null;$('#adm').hidden=!A;$('#lg').textContent=A?'خروج':'دخول';if(!A)$('#root').innerHTML=''};
-async function refresh(){try{const r=await fetch('/api/data',{cache:'no-store'}),t=await r.text();if(!r.ok||t===last)return;last=t;Object.assign(S,JSON.parse(t));upd();render()}catch(e){}}
+const upd=()=>{isAdmin=!!A;$('#adm').hidden=!A;$('#lg').textContent=A?'خروج':'دخول';if(!A)$('#root').innerHTML=''};
+async function refresh(){try{const r=await fetch('/api/data',{cache:'no-store'}),t=await r.text();if(!r.ok||t===last)return;last=t;const j=JSON.parse(t);S.graduates=j.graduates||[];S.posts=j.posts||[];S.events=j.events||[];S.settings=j.settings||{};upd();render()}catch(e){}}
 $('#lg').onclick=()=>{if(A){A=null;sessionStorage.removeItem('rm_auth');upd();return}
- const m=document.createElement('div');m.className='md';
- m.innerHTML=`<div><h3 style="color:var(--g)">دخول المشرفين</h3><label>أنا</label><select id="lwho"><option value="admin">مدير</option><option value="teacher">معلم</option></select><label>الاسم / المعرف</label><input id="lname" autocomplete="off"><label>الرقم السري</label><input id="lpass" type="password" autocomplete="new-password"><br><button class="btn" id="lok">دخول</button> <button class="btn s" id="lcn">إلغاء</button></div>`;
- document.body.appendChild(m);
- m.querySelector('#lcn').onclick=()=>m.remove();
- m.querySelector('#lok').onclick=async()=>{try{const who=m.querySelector('#lwho').value,name=m.querySelector('#lname').value.trim(),pass=m.querySelector('#lpass').value;const j=await api({op:'login',who,name,pass});A={who,pass,role:j.role,groupId:j.groupId||null};sessionStorage.setItem('rm_auth',JSON.stringify(A));upd();m.remove();if(j.role==='admin'||j.role==='teacher')$('#adm').click()}catch(e){alert(e.message)}};};
+  const m=document.createElement('div');m.className='md';
+  m.innerHTML=`<div><h3 style="color:var(--g)">دخول المشرف</h3><label>كلمة السر</label><input id="lpass" type="password" autocomplete="current-password"><br><button class="btn" id="lok">دخول</button> <button class="btn s" id="lcn" style="color:var(--tx);border-color:var(--bd)">إلغاء</button></div>`;
+  document.body.appendChild(m);
+  m.querySelector('#lcn').onclick=()=>m.remove();
+  m.querySelector('#lok').onclick=async()=>{try{const pass=m.querySelector('#lpass').value;await api({op:'login',who:'admin',pass});A={who:'admin',pass,role:'admin'};sessionStorage.setItem('rm_auth',JSON.stringify(A));upd();m.remove();$('#adm').click()}catch(e){alert(e.message)}};
+};
 refresh();setInterval(refresh,15000);
 </script>
 </body>
