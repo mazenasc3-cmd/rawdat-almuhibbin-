@@ -505,7 +505,7 @@ document.addEventListener('click',e=>{
     busy=true;inp.value='';add('user',msg);
     const wait=document.createElement('div');wait.className='chat-msg bot';wait.innerHTML='<div class="who">مساعد الدار</div><span class="thinking">جاري التفكير والبحث في معلومات الدار...</span>';log.appendChild(wait);log.scrollTop=log.scrollHeight;
     try{
-      const reply=await new Promise(resolve=>setTimeout(()=>resolve(localChat(msg)),650+Math.floor(Math.random()*650));
+      const reply=await new Promise(resolve=>setTimeout(()=>resolve(localChat(msg)),650+Math.floor(Math.random()*650)));
       wait.remove();
       add('bot',reply);
       hist.push({role:'user',content:msg},{role:'assistant',content:reply});
