@@ -78,6 +78,19 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 .lb img{max-width:min(96vw,1100px);max-height:88vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 40px #0008;background:#000}
 .lb .lb-x{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:12px;width:44px;height:44px;border:0;border-radius:50%;background:#fff2;color:#fff;font-size:22px;cursor:pointer;backdrop-filter:blur(6px)}
 .lb .lb-x:active{background:#fff4}
+.chat-box{max-width:720px;margin:0 auto;background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);display:flex;flex-direction:column;min-height:min(70vh,560px);overflow:hidden;box-shadow:0 2px 12px #0000000a}
+.chat-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
+.chat-msg{max-width:92%;padding:10px 12px;border-radius:12px;font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.chat-msg.bot{background:var(--bg);border:1px solid var(--bd);align-self:flex-start;border-bottom-right-radius:4px}
+.chat-msg.user{background:var(--g);color:#fff;align-self:flex-end;border-bottom-left-radius:4px}
+.chat-msg .who{font-size:11px;opacity:.75;margin-bottom:4px;font-weight:600}
+.chat-form{display:flex;gap:8px;padding:10px;border-top:1px solid var(--bd);background:var(--card)}
+.chat-form input{flex:1;margin:0}
+.chat-form .btn{flex-shrink:0;min-height:44px}
+.chat-hint{text-align:center;color:var(--mu);font-size:13px;margin:8px 0 14px}
+.chat-sugs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
+.chat-sugs button{background:var(--card);border:1px solid var(--bd);color:var(--tx);border-radius:999px;padding:6px 12px;font:600 12px Cairo,sans-serif;cursor:pointer}
+.chat-sugs button:active{background:var(--g);color:#fff}
 .brand{user-select:none;-webkit-user-select:none}
 .ft-dev{opacity:.85;font-size:12px;margin-top:8px;display:inline-block;cursor:default;-webkit-user-select:none;user-select:none}
 
@@ -132,6 +145,7 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
   <a href="#grads" class="navl">الخاتمون</a>
   <a href="#events" class="navl">الحفلات</a>
   <a href="#news" class="navl">الأخبار</a>
+  <a href="#chat" class="navl">المساعد</a>
 </nav>
 
 <div class="pg on" id="home">
@@ -146,6 +160,7 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
       <div class="card"><a href="#grads"><h3>🎓 الخاتمون</h3><div class="mu">فرحتنا بخاتمي كتاب الله</div></a></div>
       <div class="card"><a href="#events"><h3>🎉 الحفلات</h3><div class="mu">حفلات ومسابقات الدار</div></a></div>
       <div class="card"><a href="#news"><h3>📢 الأخبار</h3><div class="mu">آخر الإعلانات والتحديثات</div></a></div>
+      <div class="card"><a href="#chat"><h3>🤖 المساعد</h3><div class="mu">أسئلة قرآن وتجويد وسنة</div></a></div>
     </div>
   </section>
   <section>
@@ -171,6 +186,23 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 </section>
 <section class="pg" id="events"><h2>الحفلات والمسابقات</h2><div class="grid" id="evtG"></div></section>
 <section class="pg" id="news"><h2>الإعلانات والتحديثات</h2><div class="grid" id="newsG"></div></section>
+<section class="pg" id="chat">
+  <h2>المساعد التعليمي</h2>
+  <p class="chat-hint">اسأل عن التجويد، معاني الآيات، السنة، وآداب طالب القرآن — للإرشاد العلمي وليس فتوى نهائية.</p>
+  <div class="chat-sugs" id="chatSugs">
+    <button type="button" data-q="ما أحكام النون الساكنة والتنوين باختصار؟">أحكام النون الساكنة</button>
+    <button type="button" data-q="كيف أحسّن مخارج الحروف أثناء الحفظ؟">مخارج الحروف</button>
+    <button type="button" data-q="ما فضل حفظ القرآن في السنة؟">فضل الحفظ</button>
+    <button type="button" data-q="ما آداب تلاوة القرآن؟">آداب التلاوة</button>
+  </div>
+  <div class="chat-box">
+    <div class="chat-log" id="chatLog"></div>
+    <form class="chat-form" id="chatForm">
+      <input id="chatIn" type="text" placeholder="اكتب سؤالك هنا..." autocomplete="off" maxlength="2000">
+      <button class="btn" type="submit">إرسال</button>
+    </form>
+  </div>
+</section>
 
 <div class="loc-bar" id="locBar" hidden></div>
 <div class="loc-fab" id="locFab" hidden></div>
@@ -223,7 +255,7 @@ function render(){
   if($('#panel'))panel();
 }
 function route(){
-  const h=(location.hash||'#home').slice(1),ok=['home','grads','events','news'].includes(h)?h:'home';
+  const h=(location.hash||'#home').slice(1),ok=['home','grads','events','news','chat'].includes(h)?h:'home';
   document.querySelectorAll('.pg').forEach(e=>e.classList.toggle('on',e.id===ok));
   document.querySelectorAll('.navl').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+ok));
   scrollTo(0,0);
@@ -372,6 +404,40 @@ document.addEventListener('click',e=>{
   e.preventDefault();
   openLb(img.src);
 });
+
+(function(){
+  const log=$('#chatLog'), form=$('#chatForm'), inp=$('#chatIn');
+  if(!log||!form)return;
+  let hist=[], busy=false;
+  const add=(role,text)=>{
+    const d=document.createElement('div');
+    d.className='chat-msg '+(role==='user'?'user':'bot');
+    d.innerHTML='<div class="who">'+(role==='user'?'أنت':'مساعد الدار')+'</div>'+esc(text);
+    log.appendChild(d);log.scrollTop=log.scrollHeight;
+  };
+  add('bot','السلام عليكم\nأنا مساعد دار روضة المحبين. اسألني عن التجويد، القرآن، السنة، أو آداب طالب العلم.');
+  document.querySelectorAll('#chatSugs [data-q]').forEach(b=>{
+    b.onclick=()=>{inp.value=b.dataset.q;form.requestSubmit()};
+  });
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const msg=inp.value.trim();if(!msg||busy)return;
+    busy=true;inp.value='';add('user',msg);
+    const wait=document.createElement('div');wait.className='chat-msg bot';wait.textContent='جاري التفكير...';log.appendChild(wait);log.scrollTop=log.scrollHeight;
+    try{
+      const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,history:hist})});
+      const j=await r.json().catch(()=>({}));
+      wait.remove();
+      const reply=j.reply||j.error||'تعذر الرد.';
+      add('bot',reply);
+      hist.push({role:'user',content:msg},{role:'assistant',content:reply});
+      if(hist.length>16)hist=hist.slice(-16);
+    }catch(err){
+      wait.remove();add('bot','تعذر الاتصال. تحقق من الإنترنت وحاول مرة أخرى.');
+    }
+    busy=false;
+  });
+})();
 
 refresh();setInterval(refresh,15000);
 </script>
