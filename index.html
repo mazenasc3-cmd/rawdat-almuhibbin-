@@ -40,12 +40,12 @@ section>h2:after{content:"";display:block;width:56px;height:3px;background:var(-
 .mu{color:var(--mu);font-size:13px}
 .empty{text-align:center;color:var(--mu);padding:28px 12px;grid-column:1/-1}
 .post img,.post audio{width:100%;border-radius:12px;margin-top:8px}
-.soc{position:fixed;left:max(10px,env(safe-area-inset-left));bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:25}
-.soc a{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 3px 12px #0004}
+.soc{position:fixed;left:12px;bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex!important;flex-direction:column;gap:10px;z-index:45;pointer-events:auto}
+.soc a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 4px 14px #0005;flex-shrink:0}
 .soc svg{width:22px;height:22px;fill:#fff}
-.loc-fab{position:fixed;right:max(10px,env(safe-area-inset-right));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:25;display:none}
-.loc-fab a{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#e53935,#c62828);color:#fff;box-shadow:0 3px 12px #0004;text-decoration:none;transition:transform .15s,box-shadow .15s;border:2px solid #fff3}
-.loc-fab a:hover{transform:scale(1.08);box-shadow:0 4px 14px #c6282866}
+.loc-fab{position:fixed;right:12px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:45;display:none;pointer-events:auto}
+.loc-fab.show{display:block!important}
+.loc-fab a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#e53935,#c62828);color:#fff;box-shadow:0 4px 14px #0005;text-decoration:none;border:2px solid #fff3}
 .loc-fab a:active{transform:scale(.95)}
 .loc-fab svg{width:22px;height:22px;fill:#fff;display:block}
 .loc-bar{display:none!important}
@@ -98,10 +98,11 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
   .qk .mu{font-size:13px}
   .grid{grid-template-columns:1fr;gap:14px}
   .card{padding:14px}
-  .soc{left:8px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
-  .soc a{width:42px;height:42px}
-  .loc-fab{right:8px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
-  .loc-fab a{width:42px;height:42px}
+  .soc{left:10px;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex!important;z-index:45}
+  .soc a{width:46px;height:46px}
+  .loc-fab{right:10px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:45}
+  .loc-fab.show{display:block!important}
+  .loc-fab a{width:46px;height:46px}
   .loc-fab svg{width:20px;height:20px}
   footer{padding:22px 14px calc(40px + env(safe-area-inset-bottom,0px));font-size:12.5px}
   .ft-dev{display:block;margin-top:10px;padding-bottom:2px}
@@ -199,10 +200,12 @@ function render(){
   const locFab=$('#locFab');
   if(locFab){
     if(U(st.location)){
-      locFab.hidden=false;locFab.style.display='block';
+      locFab.hidden=false;locFab.classList.add('show');
       locFab.innerHTML=`<a href="${U(st.location)}" target="_blank" rel="noopener" title="موقع الدار" aria-label="الموقع"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg></a>`;
-    }else{locFab.hidden=true;locFab.style.display='none';locFab.innerHTML='';}
+    }else{locFab.hidden=true;locFab.classList.remove('show');locFab.innerHTML='';}
   }
+  const socEl=$('#soc');
+  if(socEl){socEl.style.display='flex';socEl.style.visibility='visible';}
 
   const grads=[...S.graduates].sort((a,b)=>(+b.num||0)-(+a.num||0));
   $('#gradG').innerHTML=grads.map(g=>`<div class="card" style="text-align:center">${U(g.img)?`<img class="p" src="${U(g.img)}" alt="">`:''}${g.num?`<div class="badge">خاتم رقم ${esc(g.num)}</div>`:''}<h3>${esc(g.name)}</h3><div class="mu">${esc(g.year||'')}</div><p>${esc(g.text||'')}</p></div>`).join('')||'<div class="empty">سيتم إضافة الخاتمين قريبًا</div>';
