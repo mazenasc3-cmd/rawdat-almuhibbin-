@@ -70,9 +70,8 @@ input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-r
   .soc a{width:40px;height:40px}
   .grid{gap:12px}
 }
-.adm-float{position:fixed;right:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;flex-direction:column;gap:6px}
-.adm-float .btn{opacity:.85;box-shadow:0 2px 8px #0003}
-.brand{cursor:default;user-select:none;-webkit-user-select:none}
+.brand{user-select:none;-webkit-user-select:none}
+.ft-dev{opacity:.85;font-size:12px;margin-top:6px;display:inline-block;cursor:default;-webkit-user-select:none;user-select:none}
 </style>
 </head>
 <body>
@@ -83,12 +82,6 @@ input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-r
   <a href="#events" class="navl">الحفلات</a>
   <a href="#news" class="navl">الأخبار</a>
 </nav>
-<button type="button" id="adm" hidden aria-hidden="true"></button>
-<button type="button" id="lg" hidden aria-hidden="true"></button>
-<div id="admFloat" class="adm-float" hidden>
-  <button type="button" class="btn sm" id="admOpen">لوحة</button>
-  <button type="button" class="btn sm s" id="admOut" style="color:var(--tx);border-color:var(--bd)">خروج</button>
-</div>
 
 <div class="pg on" id="home">
   <header class="hero">
@@ -126,7 +119,7 @@ input,select,textarea{width:100%;padding:9px;border:1px solid var(--bd);border-r
 <footer>
   <span class="lgw"><img src="assets/logo.jpg" alt=""></span><br>
   جميع الحقوق محفوظة © دار روضة المحبين — إدارة الشيخ مصطفى محمود الشال<br>
-  <span style="opacity:.85;font-size:12px;margin-top:6px;display:inline-block">Developed by .ENG\Mazen Medhat</span>
+  <span class="ft-dev" id="ftDev">Developed by .ENG\Mazen Medhat</span>
 </footer>
 <div class="soc" id="soc"></div>
 <div id="root"></div>
@@ -180,8 +173,8 @@ const CF={
 };
 function visTabs(){return [['graduates','الخاتمون'],['events','الحفلات'],['posts','الإعلانات'],['settings','الإعدادات']]}
 function panel(){
-  const p=$('#panel');if(!p)return;
-  let h=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="color:var(--g);font-size:22px">لوحة الإشراف</h2><button class="btn s" id="x" style="color:var(--tx);border-color:var(--bd)">إغلاق ✕</button></div><div class="tabs">${visTabs().map(([k,l])=>`<button class="btn ${k===tab?'on':''}" data-t="${k}">${l}</button>`).join('')}</div>`;
+  const p=$('#panel');if(!p)return;if(!(A&&A.role==='admin')){$('#root').innerHTML='';return;}
+  let h=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="color:var(--g);font-size:22px">لوحة الإشراف</h2><span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn d sm" id="admLogout">خروج</button><button class="btn s" id="x" style="color:var(--tx);border-color:var(--bd)">إغلاق ✕</button></span></div><div class="tabs">${visTabs().map(([k,l])=>`<button class="btn ${k===tab?'on':''}" data-t="${k}">${l}</button>`).join('')}</div>`;
   if(tab==='settings'){
     const s=S.settings||{};
     h+=`<div class="card" style="max-width:520px">${[['about','نبذة عن الدار','ta'],['whatsapp','رابط واتساب'],['facebook','رابط فيسبوك'],['instagram','رابط انستجرام'],['location','رابط الموقع على الخريطة (جوجل مابس)']].map(([k,l,t])=>`<label>${l}</label>${t?`<textarea data-s="${k}">${esc(s[k]||'')}</textarea>`:`<input dir="ltr" data-s="${k}" value="${esc(s[k]||'')}" autocomplete="off">`}`).join('')}<br><button class="btn" id="ss">حفظ</button></div>`;
@@ -190,7 +183,7 @@ function panel(){
     const cols=c.f.filter(f=>!['ta','img','aud'].includes(f[2]));
     h+=`<button class="btn" data-add>＋ إضافة ${c.t}</button><div class="tw card" style="margin-top:10px"><table><tr>${cols.map(f=>`<th>${f[1]}</th>`).join('')}<th></th></tr>${rows.map(r=>`<tr>${cols.map(f=>`<td>${esc(r[f[0]])}</td>`).join('')}<td><button class="btn s sm" data-e="${r.id}">تعديل</button> <button class="btn d sm" data-d="${r.id}">حذف</button></td></tr>`).join('')||`<tr><td colspan="9" class="mu">لا توجد بيانات</td></tr>`}</table></div>`;
   }
-  p.innerHTML=h;p.querySelector('#x').onclick=()=>{$('#root').innerHTML=''};
+  p.innerHTML=h;p.querySelector('#x').onclick=()=>{$('#root').innerHTML=''};const lo=p.querySelector('#admLogout');if(lo)lo.onclick=()=>{if(confirm('تسجيل الخروج؟')){clearAuth()}};
   p.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;panel()});
   const a=p.querySelector('[data-add]');if(a)a.onclick=()=>form(tab);
   p.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>form(tab,(S[tab]||[]).find(r=>r.id===b.dataset.e)));
@@ -221,28 +214,71 @@ function form(coll,rec){
   };
 }
 const rz=f=>new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const r=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*r;c.height=im.height*r;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.72))};im.onerror=no;im.src=URL.createObjectURL(f)});
-const api=async b=>{const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({who:A&&A.who,pass:A&&A.pass,...b})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(r.status===401?'بيانات الدخول غير صحيحة':(j.error||r.status));return j};
-const upd=()=>{isAdmin=!!A;const f=$('#admFloat');if(f)f.hidden=!A;if(!A)$('#root').innerHTML=''};
-async function refresh(){try{const r=await fetch('/api/data',{cache:'no-store'}),t=await r.text();if(!r.ok||t===last)return;last=t;const j=JSON.parse(t);S.graduates=j.graduates||[];S.posts=j.posts||[];S.events=j.events||[];S.settings=j.settings||{};upd();render()}catch(e){}}
-function openLogin(){
-  if(A){ $('#root').innerHTML='<div class="ov" id="panel"></div>';tab='graduates';panel(); return; }
-  const m=document.createElement('div');m.className='md';
-  m.innerHTML=`<div><h3 style="color:var(--g)">دخول المشرف</h3><label>كلمة السر</label><input id="lpass" type="password" autocomplete="current-password"><br><button class="btn" id="lok">دخول</button> <button class="btn s" id="lcn" style="color:var(--tx);border-color:var(--bd)">إلغاء</button></div>`;
-  document.body.appendChild(m);
-  m.querySelector('#lcn').onclick=()=>m.remove();
-  m.querySelector('#lok').onclick=async()=>{try{const pass=m.querySelector('#lpass').value;await api({op:'login',who:'admin',pass});A={who:'admin',pass,role:'admin'};sessionStorage.setItem('rm_auth',JSON.stringify(A));upd();m.remove();$('#root').innerHTML='<div class="ov" id="panel"></div>';tab='graduates';panel()}catch(e){alert(e.message)}};
+const api=async b=>{
+  const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({who:A&&A.who,pass:A&&A.pass,...b})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(r.status===401?'كلمة السر غير صحيحة':(j.error||('خطأ '+r.status)));
+  return j;
+};
+const clearAuth=()=>{A=null;try{sessionStorage.removeItem('rm_auth')}catch(e){}isAdmin=false;$('#root').innerHTML=''};
+const upd=()=>{isAdmin=!!(A&&A.role==='admin')};
+async function refresh(){
+  try{
+    const r=await fetch('/api/data',{cache:'no-store'});
+    const t=await r.text();
+    if(!r.ok||t===last)return;
+    last=t;
+    const j=JSON.parse(t);
+    S.graduates=j.graduates||[];S.posts=j.posts||[];S.events=j.events||[];S.settings=j.settings||{};
+    upd();render();
+  }catch(e){}
 }
-const admOpen=$('#admOpen');if(admOpen)admOpen.onclick=()=>{$('#root').innerHTML='<div class="ov" id="panel"></div>';tab='graduates';panel()};
-const admOut=$('#admOut');if(admOut)admOut.onclick=()=>{A=null;sessionStorage.removeItem('rm_auth');upd()};
-let taps=0,tapT=0;
-const brand=document.querySelector('.brand');
-if(brand)brand.addEventListener('click',()=>{
-  const n=Date.now();
-  if(n-tapT>900)taps=0;
-  tapT=n;taps++;
-  if(taps>=5){taps=0;openLogin()}
-});
-if(location.hash==='#adm'){history.replaceState(null,'',location.pathname);openLogin()}
+function openPanel(){
+  if(!(A&&A.role==='admin'))return;
+  $('#root').innerHTML='<div class="ov" id="panel"></div>';
+  tab='graduates';panel();
+}
+function openLogin(){
+  if(A&&A.role==='admin'){openPanel();return}
+  if(document.querySelector('.md'))return;
+  const m=document.createElement('div');m.className='md';
+  m.innerHTML=`<div><h3 style="color:var(--g)">دخول خاص</h3><label>كلمة السر</label><input id="lpass" type="password" autocomplete="current-password"><div style="margin-top:12px"><button class="btn" id="lok">دخول</button> <button class="btn s" id="lcn" style="color:var(--tx);border-color:var(--bd)">إلغاء</button></div></div>`;
+  document.body.appendChild(m);
+  const passEl=m.querySelector('#lpass');setTimeout(()=>passEl.focus(),50);
+  m.querySelector('#lcn').onclick=()=>m.remove();
+  const doLogin=async()=>{
+    try{
+      const pass=passEl.value;
+      if(!pass){alert('أدخل كلمة السر');return}
+      await api({op:'login',who:'admin',pass});
+      A={who:'admin',pass,role:'admin'};
+      try{sessionStorage.setItem('rm_auth',JSON.stringify(A))}catch(e){}
+      upd();m.remove();openPanel();
+    }catch(e){alert(e.message||'فشل الدخول')}
+  };
+  m.querySelector('#lok').onclick=doLogin;
+  passEl.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+}
+(async()=>{
+  if(A&&A.pass){
+    try{await api({op:'login',who:'admin',pass:A.pass});upd()}
+    catch(e){clearAuth()}
+  }else{A=null}
+})();
+(function(){
+  const el=$('#ftDev');if(!el)return;
+  let tmr=null;
+  const start=e=>{if(e&&e.cancelable)e.preventDefault();tmr=setTimeout(()=>{tmr=null;openLogin()},1800)};
+  const cancel=()=>{if(tmr){clearTimeout(tmr);tmr=null}};
+  el.addEventListener('mousedown',start);
+  el.addEventListener('touchstart',start,{passive:false});
+  el.addEventListener('mouseup',cancel);el.addEventListener('mouseleave',cancel);
+  el.addEventListener('touchend',cancel);el.addEventListener('touchcancel',cancel);
+})();
+if((location.hash||'').toLowerCase()==='#x-admin'){
+  history.replaceState(null,'',location.pathname+(location.search||''));
+  setTimeout(openLogin,250);
+}
 
 refresh();setInterval(refresh,15000);
 </script>
