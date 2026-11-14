@@ -1,7 +1,10 @@
 {
-  "name":"rawdat-almuhibbin-ai",
-  "private":true,
-  "type":"module",
-  "engines":{"node":">=20"},
-  "dependencies":{"@huggingface/transformers":"^3.8.1"}
+  "name": "rawdat-almuhibbin-ai",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.8.1"
+  }
 }
