@@ -1,7 +1,6 @@
 // مساعد دار روضة المحبين — أسئلة دينية (قرآن، تجويد، سنة)
-// يحتاج متغير بيئة: OPENAI_API_KEY أو XAI_API_KEY
-// اختياري: OPENAI_BASE_URL (افتراضي OpenAI) أو استخدم https://api.x.ai/v1 مع XAI_API_KEY
-// اختياري: OPENAI_MODEL مثل gpt-4o-mini أو grok-3-mini
+// Environment: OPENAI_API_KEY أو XAI_API_KEY
+// Optional: OPENAI_MODEL (مثلاً gpt-4o-mini) ، OPENAI_BASE_URL
 
 const SYSTEM = `أنت مساعد تعليمي في «دار روضة المحبين لتحفيظ القرآن الكريم».
 مهمتك مساعدة الطلاب في:
@@ -18,29 +17,49 @@ const SYSTEM = `أنت مساعد تعليمي في «دار روضة المحب
 5) لا تختلق أحاديث أو آيات. إن لم تكن متأكدًا قل ذلك.
 6) شجّع الطالب على الحفظ والمراجعة بلطف.`;
 
+function arError(status, msg) {
+  const m = String(msg || '').toLowerCase();
+  if (!msg && status === 503) return 'المساعد غير مفعّل: مفتاح OPENAI_API_KEY غير موجود على Vercel أو لم يتم عمل Redeploy.';
+  if (status === 401 || m.includes('incorrect api key') || m.includes('invalid api key') || m.includes('authentication'))
+    return 'مفتاح OpenAI غير صحيح. تأكد من نسخ المفتاح كاملًا في Value بدون مسافات، ثم Redeploy.';
+  if (status === 429 || m.includes('rate limit') || m.includes('quota') || m.includes('billing') || m.includes('insufficient'))
+    return 'تم تجاوز الحد أو لا يوجد رصيد في حساب OpenAI. راجع Billing في platform.openai.com.';
+  if (m.includes('model') && (m.includes('not found') || m.includes('does not exist') || m.includes('invalid')))
+    return 'اسم الموديل غير متاح. احذف OPENAI_MODEL أو ضع gpt-4o-mini ثم Redeploy.';
+  if (status === 404) return 'عنوان الـ API غير صحيح. لا تضف OPENAI_BASE_URL إلا إذا كنت تعرف ما تفعل.';
+  if (msg) return 'خطأ من OpenAI: ' + String(msg).slice(0, 180);
+  return 'تعذر الاتصال بالمساعد الآن. حاول بعد قليل.';
+}
+
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(204).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
+  if (req.method !== 'POST') return res.status(405).json({ error: 'method', reply: 'استخدم POST فقط.' });
 
   try {
-    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
+    let body = req.body;
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch (e) { body = {}; }
+    }
+    body = body || {};
     const msg = String(body.message || '').trim().slice(0, 2000);
-    if (!msg) return res.status(400).json({ error: 'empty' });
+    if (!msg) return res.status(400).json({ error: 'empty', reply: 'اكتب سؤالًا أولًا.' });
 
-    const xai = process.env.XAI_API_KEY;
-    const oai = process.env.OPENAI_API_KEY;
+    const xai = (process.env.XAI_API_KEY || '').trim();
+    const oai = (process.env.OPENAI_API_KEY || '').trim();
     const key = xai || oai;
     if (!key) {
       return res.status(503).json({
         error: 'no-key',
-        reply: 'المساعد غير مفعّل حاليًا. يرجى إضافة مفتاح API في إعدادات Vercel (XAI_API_KEY أو OPENAI_API_KEY).'
+        reply: arError(503, '')
       });
     }
 
     const base = (process.env.OPENAI_BASE_URL || (xai ? 'https://api.x.ai/v1' : 'https://api.openai.com/v1')).replace(/\/$/, '');
-    const model = process.env.OPENAI_MODEL || (xai ? 'grok-3-mini' : 'gpt-4o-mini');
+    const model = (process.env.OPENAI_MODEL || (xai ? 'grok-3-mini' : 'gpt-4o-mini')).trim();
 
     const history = Array.isArray(body.history) ? body.history.slice(-8) : [];
     const messages = [
@@ -67,13 +86,19 @@ module.exports = async (req, res) => {
 
     const j = await r.json().catch(() => ({}));
     if (!r.ok) {
-      const err = (j && (j.error && j.error.message)) || ('api ' + r.status);
-      return res.status(502).json({ error: String(err), reply: 'تعذر الاتصال بالمساعد الآن. حاول بعد قليل.' });
+      const errMsg = (j && j.error && (j.error.message || j.error.code)) || ('status ' + r.status);
+      return res.status(502).json({
+        error: String(errMsg),
+        reply: arError(r.status, errMsg)
+      });
     }
 
     const reply = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || 'لم أستطع إنشاء رد.';
     return res.json({ reply: String(reply).trim() });
   } catch (e) {
-    return res.status(500).json({ error: String(e.message || e), reply: 'حدث خطأ. حاول مرة أخرى.' });
+    return res.status(500).json({
+      error: String(e.message || e),
+      reply: 'حدث خطأ في السيرفر: ' + String(e.message || e).slice(0, 120)
+    });
   }
 };
