@@ -1,13 +1,45 @@
 # موقع دار روضة المحبين
 
-موقع ثابت (HTML) + Firebase للتحديث الفوري لكل الزوار.
+موقع لدار تحفيظ القرآن الكريم: الخاتمون، الحفلات، الأخبار، ومساعد تعليمي ذكي — بتحديث فوري للبيانات.
 
-## خطوات التشغيل
-1. **Firebase:** أنشئ مشروعًا في console.firebase.google.com ← أضف تطبيق ويب ← انسخ الإعدادات إلى `firebase-config.js`.
-2. **قاعدة البيانات:** Build ← Firestore Database ← Create database، ثم تبويب Rules والصق محتوى `firestore.rules` واضغط Publish.
-3. **تسجيل الدخول:** Build ← Authentication ← Sign-in method ← فعّل Google. ثم Settings ← Authorized domains ← أضف `YOUR-USERNAME.github.io`.
-4. **GitHub Pages:** في المستودع: Settings ← Pages ← Source: Deploy from a branch ← main / (root).
-5. **اجعل نفسك مديرًا:** افتح الموقع واضغط «دخول» بحسابك، ثم من Authentication ← Users انسخ الـ UID الخاص بك، وفي Firestore أنشئ مجموعة `admins` ووثيقة رقمها هو الـ UID (يمكن ترك الحقول فارغة أو إضافة حقل `ok`=true). حدّث الصفحة وستظهر «لوحة الإشراف».
-6. **المعلمون:** يسجل كل معلم دخوله مرة واحدة، ثم أضفه من لوحة الإشراف ← المعلمون واربطه بمجموعته.
+## الملفات
+- `index.html` — الموقع (HTML + CSS + JavaScript).
+- `api/data.js` — خادم البيانات على Vercel (Redis / Upstash) مع التحقق من كلمة سر المشرف.
+- `api/chat.js` — المساعد الذكي.
+- `api/kb.js` — قاعدة معرفة موثوقة (تجويد، آداب، علوم القرآن).
+- `dev-badge.js` — شارة المطوّر العائمة (تظهر في كل صفحة وتوصل للبروتوفوليو).
+- `assets/` — الصور (`logo.jpg`، `art.jpg`، `dev-mazen.png`).
 
-الصور: `assets/logo.jpg` (الشعار) و `assets/art.jpg` (الشعار الزخرفي) — استبدلهما بنفس الاسم لتغييرهما.
+## المساعد الذكي — كيف يعمل
+يعمل على ثلاث طبقات، بالترتيب:
+
+1. **قاعدة معرفة موثوقة (بدون إنترنت)** — أسئلة التجويد والآداب تُجاب فورًا وبإجابات دقيقة ثابتة من `api/kb.js`.
+2. **مزوّد ذكاء اصطناعي مجاني** — للأسئلة العامة، عبر `GROQ_API_KEY` أو `OPENROUTER_API_KEY` إن وُجدا، وإلا عبر Pollinations المجاني.
+3. **رد احتياطي** — إن تعذّر الاتصال، يرجع المساعد لرسالة توضيحية مع اقتراحات أسئلة.
+
+المساعد يمرّر للذكاء الاصطناعي «معلومات الموقع» الحالية + قاعدة المعرفة كسياق (RAG)، فيلتزم بها ولا يخترع أحكامًا.
+
+### (اختياري) تحسين الاستقرار بمفتاح مجاني
+Pollinations المجاني يسمح بردّ واحد كل 45 ثانية، وهو مناسب للمواقع الصغيرة. لاستقرار أعلى، أضف مفتاح Groq المجاني:
+1. سجّل في `console.groq.com` وأنشئ مفتاحًا.
+2. في Vercel: Settings ← Environment Variables ← أضف `GROQ_API_KEY` بقيمته.
+3. أعد النشر. سيُستخدم Groq تلقائيًا قبل Pollinations.
+
+## شارة المطوّر (dev-badge)
+مكوّن مستقل يعرض زرًا عائمًا يفتح بطاقة تعريف بالمطوّر ورابط البروتوفوليو. للتركيب في أي مشروع:
+
+```html
+<script>window.DEV_BADGE = { accent: "#d8b45e", position: "right" };</script>
+<script src="dev-badge.js" defer></script>
+```
+
+الإعدادات المتاحة: `name`, `nameEn`, `role`, `note`, `avatar`, `portfolio`, `github`, `email`, `whatsapp`, `accent`, `position`.
+
+## التشغيل
+1. **البيانات:** أنشئ قاعدة Upstash Redis، ثم في Vercel أضف المتغيّرات:
+   - `KV_REST_API_URL` و `KV_REST_API_TOKEN` (أو `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`).
+   - `ADMIN_PASSWORD` — كلمة سر لوحة الإشراف.
+2. **النشر:** ارفع المستودع إلى Vercel (يتم اكتشاف `api/` تلقائيًا).
+3. **الإشراف:** افتح الموقع واضغط مطوّلًا على نص المطوّر في الفوتر، ثم أدخل كلمة السر.
+
+الصور: `assets/logo.jpg` (الشعار) و `assets/art.jpg` (الزخرفة) — استبدلهما بنفس الاسم لتغييرهما.
