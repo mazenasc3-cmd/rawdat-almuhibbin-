@@ -191,12 +191,16 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 <section class="pg" id="news"><h2>الإعلانات والتحديثات</h2><div class="grid" id="newsG"></div></section>
 <section class="pg" id="chat">
   <h2>المساعد التعليمي</h2>
-  <p class="chat-hint">اسأل عن التجويد، معاني الآيات، السنة، وآداب طالب القرآن — للإرشاد العلمي وليس فتوى نهائية.</p>
+  <p class="chat-hint">اسأل عن التجويد وعلوم القرآن، أو عن الدار: التواصل والمواعيد والعنوان وطريقة التسجيل.</p>
   <div class="chat-sugs" id="chatSugs">
     <button type="button" data-q="ما أحكام النون الساكنة والتنوين باختصار؟">أحكام النون الساكنة</button>
     <button type="button" data-q="كيف أحسّن مخارج الحروف أثناء الحفظ؟">مخارج الحروف</button>
     <button type="button" data-q="ما فضل حفظ القرآن في السنة؟">فضل الحفظ</button>
     <button type="button" data-q="ما آداب تلاوة القرآن؟">آداب التلاوة</button>
+    <button type="button" data-q="إزاي أتواصل مع الدار؟">التواصل مع الدار</button>
+    <button type="button" data-q="إيه مواعيد الحلقات؟">مواعيد الحلقات</button>
+    <button type="button" data-q="عنوان الدار فين؟">عنوان الدار</button>
+    <button type="button" data-q="إزاي أسجّل في الدار؟">التسجيل في الدار</button>
   </div>
   <div class="chat-box">
     <div class="chat-log" id="chatLog"></div>
@@ -279,7 +283,7 @@ function panel(){
   let h=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="color:var(--g);font-size:22px">لوحة الإشراف</h2><span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn d sm" id="admLogout">خروج</button><button class="btn s" id="x" style="color:var(--tx);border-color:var(--bd)">إغلاق ✕</button></span></div><div class="tabs">${visTabs().map(([k,l])=>`<button class="btn ${k===tab?'on':''}" data-t="${k}">${l}</button>`).join('')}</div>`;
   if(tab==='settings'){
     const s=S.settings||{};
-    h+=`<div class="card" style="max-width:520px">${[['about','نبذة عن الدار','ta'],['whatsapp','رابط واتساب'],['facebook','رابط فيسبوك'],['instagram','رابط انستجرام'],['location','رابط الموقع على الخريطة (جوجل مابس)']].map(([k,l,t])=>`<label>${l}</label>${t?`<textarea data-s="${k}">${esc(s[k]||'')}</textarea>`:`<input dir="ltr" data-s="${k}" value="${esc(s[k]||'')}" autocomplete="off">`}`).join('')}<br><button class="btn" id="ss">حفظ</button></div>`;
+    h+=`<div class="card" style="max-width:520px">${[['about','نبذة عن الدار','ta'],['phone','رقم الهاتف / واتساب'],['email','البريد الإلكتروني'],['address','العنوان','ta'],['hours','مواعيد العمل والحلقات','ta'],['classes','الحلقات والمراحل','ta'],['teachers','المعلمون','ta'],['register','كيفية التسجيل والالتحاق','ta'],['whatsapp','رابط واتساب'],['facebook','رابط فيسبوك'],['instagram','رابط انستجرام'],['location','رابط الموقع على الخريطة (جوجل مابس)']].map(([k,l,t])=>`<label>${l}</label>${t?`<textarea data-s="${k}">${esc(s[k]||'')}</textarea>`:`<input dir="ltr" data-s="${k}" value="${esc(s[k]||'')}" autocomplete="off">`}`).join('')}<br><button class="btn" id="ss">حفظ</button></div>`;
   } else {
     const c=CF[tab];let rows=S[tab]||[];if(tab==='graduates')rows=[...rows].sort((a,b)=>(+b.num||0)-(+a.num||0));
     const cols=c.f.filter(f=>!['ta','img','aud'].includes(f[2]));
@@ -421,7 +425,7 @@ document.addEventListener('click',e=>{
     d.innerHTML='<div class="who">'+(role==='user'?'أنت':'مساعد الدار')+'</div>'+esc(text);
     log.appendChild(d);log.scrollTop=log.scrollHeight;
   };
-  add('bot','السلام عليكم\nأنا مساعد دار روضة المحبين. اسألني عن التجويد، القرآن، السنة، أو آداب طالب العلم.');
+  add('bot','السلام عليكم\nأنا مساعد دار روضة المحبين. اسألني عن التجويد وعلوم القرآن، أو عن الدار: التواصل، المواعيد، العنوان، وطريقة التسجيل.');
   let aiLoading=false;
 
   function siteContext(){
@@ -429,12 +433,27 @@ document.addEventListener('click',e=>{
     const grads=[...(S.graduates||[])].sort((a,b)=>(+b.num||0)-(+a.num||0)).slice(0,12);
     const events=[...(S.events||[])].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,10);
     const posts=[...(S.posts||[])].sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,10);
+    const waDigits=st.phone?String(st.phone).replace(/[^\d+]/g,''):'';
     return [
-      'معلومات الموقع الحالية:',
+      'معلومات الموقع الحالية (استخدمها للإجابة عن أسئلة الدار):',
+      'اسم الدار: دار روضة المحبين — دار لتحفيظ القرآن الكريم وتعليم أحكام التلاوة.',
       st.about?'نبذة الدار: '+st.about:'',
+      st.address?'العنوان: '+st.address:'',
+      st.phone?'الهاتف/واتساب: '+st.phone:'',
+      waDigits?'رابط واتساب مباشر: https://wa.me/'+waDigits.replace(/^\+/,''):'',
+      st.email?'البريد الإلكتروني: '+st.email:'',
+      st.hours?'مواعيد العمل والحلقات: '+st.hours:'',
+      st.classes?'الحلقات والمراحل: '+st.classes:'',
+      st.teachers?'المعلمون: '+st.teachers:'',
+      st.register?'كيفية التسجيل: '+st.register:'',
+      st.location?'رابط موقع الدار على الخريطة: '+st.location:'',
+      st.whatsapp?'رابط واتساب: '+st.whatsapp:'',
+      st.facebook?'رابط فيسبوك: '+st.facebook:'',
+      st.instagram?'رابط انستجرام: '+st.instagram:'',
       grads.length?'الخاتمون: '+grads.map(g=>g.name+(g.year?' ('+g.year+')':'')).join('، '):'',
-      events.length?'الأحداث: '+events.map(e=>e.title+(e.year?' — '+e.year:'')+(e.text?' — '+e.text:'')).join(' | '):'',
-      posts.length?'الأخبار: '+posts.map(p=>p.title+(p.text?' — '+p.text:'')).join(' | '):''
+      events.length?'الأحداث والحفلات: '+events.map(e=>e.title+(e.year?' — '+e.year:'')+(e.text?' — '+e.text:'')).join(' | '):'',
+      posts.length?'الأخبار والإعلانات: '+posts.map(p=>p.title+(p.text?' — '+p.text:'')).join(' | '):'',
+      'ملاحظة: إن لم تتوفر معلومة أعلاه عن الدار، أخبر السائل أنها غير متاحة حاليًا ووجّهه للتواصل مع الدار.'
     ].filter(Boolean).join('\n');
   }
 
@@ -448,6 +467,7 @@ document.addEventListener('click',e=>{
         body:JSON.stringify({
           message:q,
           history:hist.slice(-8),
+          site:{settings:S.settings||{},graduates:S.graduates||[],events:S.events||[],posts:S.posts||[]},
           siteContext:siteContext()
         }),
         signal:ctrl.signal
