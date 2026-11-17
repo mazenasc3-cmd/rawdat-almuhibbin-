@@ -18,7 +18,12 @@ h1,h2,h3{font-family:Amiri,'Traditional Arabic',serif;margin:0}
 img{max-width:100%;height:auto}
 nav{position:sticky;top:0;z-index:30;background:var(--g);color:#fff;display:flex;align-items:center;gap:6px;padding:10px var(--pad);padding-top:calc(10px + env(safe-area-inset-top,0px));flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;box-shadow:0 2px 12px #0002}
 nav::-webkit-scrollbar{display:none}
-nav .brand{display:flex;align-items:center;gap:8px;margin-inline-end:auto;flex-shrink:0}
+nav .brand{display:flex;align-items:center;gap:8px;margin-inline-end:auto;flex-shrink:0;background:transparent;border:0;color:#fff;font:inherit;cursor:pointer;padding:4px 6px;border-radius:12px;transition:background .25s ease,transform .25s ease}
+nav .brand:hover{background:#ffffff1f}
+nav .brand:active{transform:scale(.96)}
+nav .brand:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+nav .brand .lgw{transition:transform .35s cubic-bezier(.19,1,.22,1),box-shadow .35s ease}
+nav .brand:hover .lgw{transform:rotate(-6deg) scale(1.08);box-shadow:0 0 0 3px #d8b45e55}
 nav b{font-family:Amiri,serif;font-size:clamp(15px,4vw,18px);white-space:nowrap}
 nav a{color:#fff;text-decoration:none;font-size:14px;padding:8px 12px;border-radius:10px;white-space:nowrap;flex-shrink:0;min-height:40px;display:inline-flex;align-items:center}
 nav a:hover,nav a.on{background:#ffffff22}
@@ -40,14 +45,25 @@ section>h2:after{content:"";display:block;width:56px;height:3px;background:var(-
 .mu{color:var(--mu);font-size:13px}
 .empty{text-align:center;color:var(--mu);padding:28px 12px;grid-column:1/-1}
 .post img,.post audio{width:100%;border-radius:12px;margin-top:8px}
-.soc{position:fixed;left:12px;bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex!important;flex-direction:column;gap:10px;z-index:45;pointer-events:auto}
-.soc a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 4px 14px #0005;flex-shrink:0}
-.soc svg{width:22px;height:22px;fill:#fff}
+.soc{position:fixed;left:12px;bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex!important;flex-direction:column;gap:12px;z-index:45;pointer-events:auto}
+.soc a{position:relative;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 4px 14px #0005;flex-shrink:0;text-decoration:none;border:2px solid #ffffff33;transition:transform .3s cubic-bezier(.19,1,.22,1),box-shadow .3s ease,filter .3s ease;animation:socIn .5s cubic-bezier(.19,1,.22,1) backwards}
+.soc a:nth-child(1){animation-delay:.05s}.soc a:nth-child(2){animation-delay:.12s}.soc a:nth-child(3){animation-delay:.19s}
+@keyframes socIn{from{opacity:0;transform:translateX(-24px) scale(.6)}to{opacity:1;transform:none}}
+.soc a:hover,.soc a:focus-visible{transform:translateY(-3px) scale(1.12);box-shadow:0 10px 26px #0007,0 0 0 4px #ffffff2e;filter:saturate(1.25) brightness(1.08)}
+.soc a:active{transform:scale(.92)}
+.soc a:before{content:attr(data-tip);position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%) translateX(6px);background:#111c;color:#fff;font:600 12px Cairo,sans-serif;padding:5px 10px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;backdrop-filter:blur(6px)}
+.soc a:hover:before,.soc a:focus-visible:before{opacity:1;transform:translateY(-50%) translateX(0)}
+.soc svg{width:23px;height:23px;fill:#fff}
 .loc-fab{position:fixed;right:12px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:45;display:none;pointer-events:auto}
 .loc-fab.show{display:block!important}
-.loc-fab a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#e53935,#c62828);color:#fff;box-shadow:0 4px 14px #0005;text-decoration:none;border:2px solid #fff3}
-.loc-fab a:active{transform:scale(.95)}
-.loc-fab svg{width:22px;height:22px;fill:#fff;display:block}
+.loc-fab a{position:relative;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#e53935,#c62828);color:#fff;box-shadow:0 4px 14px #0005;text-decoration:none;border:2px solid #ffffff4d;transition:transform .3s cubic-bezier(.19,1,.22,1),box-shadow .3s ease}
+.loc-fab a:hover,.loc-fab a:focus-visible{transform:translateY(-3px) scale(1.12);box-shadow:0 10px 26px #0007,0 0 0 4px #e5393540}
+.loc-fab a:active{transform:scale(.92)}
+.loc-fab a:before{content:"موقع الدار على الخريطة";position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%) translateX(6px);background:#111c;color:#fff;font:600 12px Cairo,sans-serif;padding:5px 10px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;backdrop-filter:blur(6px)}
+.loc-fab a:hover:before,.loc-fab a:focus-visible:before{opacity:1;transform:translateY(-50%) translateX(0)}
+.loc-fab svg{width:23px;height:23px;fill:#fff;display:block}
+.loc-fab a:after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid #e53935;opacity:.8;animation:locPulse 2.4s ease-out infinite}
+@keyframes locPulse{0%{transform:scale(1);opacity:.7}70%{transform:scale(1.4);opacity:0}100%{opacity:0}}
 .loc-bar{display:none!important}
 footer{background:var(--g);color:#fff;text-align:center;padding:24px var(--pad) calc(32px + env(safe-area-inset-bottom,0px));font-size:13px;position:relative;z-index:5;line-height:1.85}
 .ov{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto;padding:var(--pad);padding-top:calc(var(--pad) + env(safe-area-inset-top,0px));padding-bottom:calc(var(--pad) + env(safe-area-inset-bottom,0px))}
@@ -64,6 +80,9 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 .lgw.big{width:clamp(120px,28vw,150px);height:clamp(120px,28vw,150px);border-width:3px;margin:0 auto 14px;display:block;box-shadow:0 6px 20px #0004;background:#fff}
 .qk{grid-template-columns:repeat(3,1fr)}
 .qk a{text-decoration:none;color:inherit;text-align:center;display:block;padding:4px 0}
+.qk .qk-btn{display:block;width:100%;background:transparent;border:0;font:inherit;color:inherit;text-align:center;padding:4px 0;cursor:pointer}
+.qk .card{transition:transform .3s cubic-bezier(.19,1,.22,1),box-shadow .3s ease,border-color .3s ease}
+.qk .card:hover{transform:translateY(-4px);box-shadow:0 12px 28px #0000001f;border-color:var(--gold)}
 .qk a:hover{border-color:var(--gold)}
 .qk h3{font-size:clamp(15px,3.8vw,20px)}
 .qk .mu{font-size:12px}
@@ -78,8 +97,29 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 .lb img{max-width:min(96vw,1100px);max-height:88vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 40px #0008;background:#000}
 .lb .lb-x{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:12px;width:44px;height:44px;border:0;border-radius:50%;background:#fff2;color:#fff;font-size:22px;cursor:pointer;backdrop-filter:blur(6px)}
 .lb .lb-x:active{background:#fff4}
-.chat-box{max-width:720px;margin:0 auto;background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);display:flex;flex-direction:column;min-height:min(70vh,560px);overflow:hidden;box-shadow:0 2px 12px #0000000a}
-.chat-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
+.chat-fab{position:fixed;right:12px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:46;display:flex;align-items:center;gap:8px;height:54px;padding:0 16px 0 14px;border:2px solid #ffffff4d;border-radius:999px;background:linear-gradient(145deg,var(--g),var(--g2));color:#fff;font:700 14px Cairo,sans-serif;cursor:pointer;box-shadow:0 8px 24px #0006;transition:transform .3s cubic-bezier(.19,1,.22,1),box-shadow .3s ease,filter .3s ease}
+.chat-fab svg{width:24px;height:24px;fill:currentColor}
+.chat-fab:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 14px 32px #0007;filter:brightness(1.08)}
+.chat-fab:active{transform:scale(.95)}
+.chat-fab:after{content:"";position:absolute;inset:-3px;border-radius:999px;border:2px solid var(--gold);opacity:.75;animation:fabPulse 2.6s ease-out infinite}
+@keyframes fabPulse{0%{transform:scale(1);opacity:.6}70%{transform:scale(1.18);opacity:0}100%{opacity:0}}
+.chat-fab.open{filter:brightness(.9)}
+.chat-wrap{position:fixed;inset:0;z-index:47;display:flex;justify-content:flex-end;align-items:flex-end;pointer-events:none}
+.chat-ov{position:absolute;inset:0;background:#0007;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s;pointer-events:none}
+.chat-panel{position:relative;width:min(440px,100%);max-height:min(86vh,720px);margin:12px;background:var(--card);border:1px solid var(--bd);border-radius:18px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 60px #0006;transform:translateY(24px) scale(.96);opacity:0;visibility:hidden;transition:transform .32s cubic-bezier(.19,1,.22,1),opacity .3s ease,visibility .3s;pointer-events:none}
+.chat-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(145deg,var(--g),var(--g2));color:#fff}
+.chat-head__ic{width:38px;height:38px;border-radius:50%;overflow:hidden;background:#fff;border:2px solid var(--gold);flex-shrink:0}
+.chat-head__ic img{width:100%;height:100%;object-fit:contain;padding:2px}
+.chat-head__tx{flex:1;min-width:0;line-height:1.35}
+.chat-head__tx b{display:block;font-size:15px}
+.chat-head__tx span{display:block;font-size:11.5px;opacity:.85}
+.chat-head__x{width:36px;height:36px;border:0;border-radius:50%;background:#ffffff26;color:#fff;font-size:17px;cursor:pointer;flex-shrink:0;transition:background .2s,transform .2s}
+.chat-head__x:hover{background:#ffffff40}
+.chat-head__x:active{transform:scale(.9)}
+.chat-wrap.open{pointer-events:auto}
+.chat-wrap.open .chat-ov{opacity:1;visibility:visible;pointer-events:auto}
+.chat-wrap.open .chat-panel{transform:none;opacity:1;visibility:visible;pointer-events:auto}
+.chat-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch;min-height:180px}
 .chat-msg{max-width:92%;padding:10px 12px;border-radius:12px;font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
 .chat-msg.bot{background:var(--bg);border:1px solid var(--bd);align-self:flex-start;border-bottom-right-radius:4px}
 .chat-msg.user{background:var(--g);color:#fff;align-self:flex-end;border-bottom-left-radius:4px}
@@ -90,10 +130,10 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 .chat-form{display:flex;gap:8px;padding:10px;border-top:1px solid var(--bd);background:var(--card)}
 .chat-form input{flex:1;margin:0}
 .chat-form .btn{flex-shrink:0;min-height:44px}
-.chat-hint{text-align:center;color:var(--mu);font-size:13px;margin:8px 0 14px}
-.chat-sugs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
-.chat-sugs button{background:var(--card);border:1px solid var(--bd);color:var(--tx);border-radius:999px;padding:6px 12px;font:600 12px Cairo,sans-serif;cursor:pointer}
-.chat-sugs button:active{background:var(--g);color:#fff}
+.chat-sugs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 14px}
+.chat-sugs button{background:var(--bg);border:1px solid var(--bd);color:var(--tx);border-radius:999px;padding:6px 12px;font:600 12px Cairo,sans-serif;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease}
+.chat-sugs button:hover{border-color:var(--gold);transform:translateY(-2px)}
+.chat-sugs button:active{background:var(--g);color:#fff;border-color:var(--g)}
 .brand{user-select:none;-webkit-user-select:none}
 .ft-dev{opacity:.85;font-size:12px;margin-top:8px;display:inline-block;cursor:default;-webkit-user-select:none;user-select:none}
 
@@ -114,12 +154,20 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
   .qk .mu{font-size:13px}
   .grid{grid-template-columns:1fr;gap:14px}
   .card{padding:14px}
-  .soc{left:10px;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex!important;z-index:45}
+  .soc{left:10px;bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex!important;z-index:45;gap:10px}
   .soc a{width:46px;height:46px}
+  .soc a:before{display:none}
   .loc-fab{right:10px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:45}
   .loc-fab.show{display:block!important}
   .loc-fab a{width:46px;height:46px}
+  .loc-fab a:before{display:none}
   .loc-fab svg{width:20px;height:20px}
+  .chat-fab{right:10px;bottom:calc(74px + env(safe-area-inset-bottom,0px));height:48px;padding:0 14px 0 12px;font-size:13px}
+  .chat-fab__label{display:inline}
+  .chat-fab svg{width:21px;height:21px}
+  .chat-panel{width:100%;max-height:min(92vh,100%);margin:0;border-radius:18px 18px 0 0}
+  .chat-wrap{align-items:flex-end}
+  .chat-panel{transform:translateY(40px)}
   footer{padding:22px 14px calc(40px + env(safe-area-inset-bottom,0px));font-size:12.5px}
   .ft-dev{display:block;margin-top:10px;padding-bottom:2px}
   .md>div{padding:14px;width:100%;border-radius:12px 12px 0 0;max-height:92vh;align-self:end}
@@ -143,12 +191,11 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 </head>
 <body>
 <nav>
-  <span class="brand"><span class="lgw"><img src="assets/logo.jpg" alt=""></span><b>دار روضة المحبين</b></span>
+  <button class="brand" id="brandBtn" type="button" aria-label="عن المطوّر"><span class="lgw"><img src="assets/logo.jpg" alt=""></span><b>دار روضة المحبين</b></button>
   <a href="#home" class="navl">الرئيسية</a>
   <a href="#grads" class="navl">الخاتمون</a>
   <a href="#events" class="navl">الحفلات</a>
   <a href="#news" class="navl">الأخبار</a>
-  <a href="#chat" class="navl">المساعد</a>
 </nav>
 
 <div class="pg on" id="home">
@@ -163,7 +210,7 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
       <div class="card"><a href="#grads"><h3>🎓 الخاتمون</h3><div class="mu">فرحتنا بخاتمي كتاب الله</div></a></div>
       <div class="card"><a href="#events"><h3>🎉 الحفلات</h3><div class="mu">حفلات ومسابقات الدار</div></a></div>
       <div class="card"><a href="#news"><h3>📢 الأخبار</h3><div class="mu">آخر الإعلانات والتحديثات</div></a></div>
-      <div class="card"><a href="#chat"><h3>🤖 المساعد</h3><div class="mu">أسئلة قرآن وتجويد وسنة</div></a></div>
+      <div class="card"><button type="button" class="qk-btn" data-openchat><h3>🤖 المساعد</h3><div class="mu">أسئلة قرآن وتجويد وسنة</div></button></div>
     </div>
   </section>
   <section>
@@ -189,39 +236,48 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 </section>
 <section class="pg" id="events"><h2>الحفلات والمسابقات</h2><div class="grid" id="evtG"></div></section>
 <section class="pg" id="news"><h2>الإعلانات والتحديثات</h2><div class="grid" id="newsG"></div></section>
-<section class="pg" id="chat">
-  <h2>المساعد التعليمي</h2>
-  <p class="chat-hint">اسأل عن التجويد وعلوم القرآن، أو عن الدار: التواصل والمواعيد والعنوان وطريقة التسجيل.</p>
-  <div class="chat-sugs" id="chatSugs">
-    <button type="button" data-q="ما أحكام النون الساكنة والتنوين باختصار؟">أحكام النون الساكنة</button>
-    <button type="button" data-q="كيف أحسّن مخارج الحروف أثناء الحفظ؟">مخارج الحروف</button>
-    <button type="button" data-q="ما فضل حفظ القرآن في السنة؟">فضل الحفظ</button>
-    <button type="button" data-q="ما آداب تلاوة القرآن؟">آداب التلاوة</button>
-    <button type="button" data-q="إزاي أتواصل مع الدار؟">التواصل مع الدار</button>
-    <button type="button" data-q="إيه مواعيد الحلقات؟">مواعيد الحلقات</button>
-    <button type="button" data-q="عنوان الدار فين؟">عنوان الدار</button>
-    <button type="button" data-q="إزاي أسجّل في الدار؟">التسجيل في الدار</button>
-  </div>
-  <div class="chat-box">
+<!-- لوحة المساعد العائمة -->
+<button class="chat-fab" id="chatFab" type="button" aria-label="المساعد التعليمي" aria-expanded="false">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.9 3 3 6.3 3 10.3c0 2.2 1.2 4.2 3.2 5.5-.1 1-.6 2.2-1.4 3.1-.2.2 0 .6.3.6 1.8-.1 3.3-.9 4.2-1.6.9.2 1.8.3 2.7.3 5.1 0 9-3.3 9-7.6S17.1 3 12 3z"/></svg>
+  <span class="chat-fab__label">المساعد</span>
+</button>
+<div class="chat-wrap" id="chatWrap" aria-hidden="true">
+  <div class="chat-ov" data-chat-close></div>
+  <section class="chat-panel" role="dialog" aria-modal="true" aria-label="المساعد التعليمي">
+    <header class="chat-head">
+      <span class="chat-head__ic"><img src="assets/logo.jpg" alt=""></span>
+      <div class="chat-head__tx"><b>المساعد التعليمي</b><span>اسألني عن التجويد أو عن الدار</span></div>
+      <button class="chat-head__x" type="button" data-chat-close aria-label="إغلاق">✕</button>
+    </header>
+    <div class="chat-sugs" id="chatSugs">
+      <button type="button" data-q="ما أحكام النون الساكنة والتنوين باختصار؟">أحكام النون الساكنة</button>
+      <button type="button" data-q="كيف أحسّن مخارج الحروف أثناء الحفظ؟">مخارج الحروف</button>
+      <button type="button" data-q="ما فضل حفظ القرآن في السنة؟">فضل الحفظ</button>
+      <button type="button" data-q="ما آداب تلاوة القرآن؟">آداب التلاوة</button>
+      <button type="button" data-q="إزاي أتواصل مع الدار؟">التواصل مع الدار</button>
+      <button type="button" data-q="إيه مواعيد الحلقات؟">مواعيد الحلقات</button>
+      <button type="button" data-q="عنوان الدار فين؟">عنوان الدار</button>
+      <button type="button" data-q="إزاي أسجّل في الدار؟">التسجيل في الدار</button>
+    </div>
     <div class="chat-log" id="chatLog"></div>
     <form class="chat-form" id="chatForm">
       <input id="chatIn" type="text" placeholder="اكتب سؤالك هنا..." autocomplete="off" maxlength="2000">
       <button class="btn" type="submit">إرسال</button>
     </form>
-  </div>
-</section>
+  </section>
+</div>
 
 <div class="loc-bar" id="locBar" hidden></div>
 <div class="loc-fab" id="locFab" hidden></div>
 <footer>
   <span class="lgw"><img src="assets/logo.jpg" alt=""></span><br>
   جميع الحقوق محفوظة © دار روضة المحبين — إدارة الشيخ مصطفى محمود الشال<br>
-  <span class="ft-dev" id="ftDev">Developed by .ENG\Mazen Medhat — <a href="https://mazenasc3-cmd.github.io/My-Private-Space/" target="_blank" rel="noopener">الملف الشخصي</a></span>
+  <span class="ft-dev" id="ftDev">Developed by .ENG\Mazen Medhat — <a href="https://my-protfolio-space.vercel.app/" target="_blank" rel="noopener">الملف الشخصي</a></span>
 </footer>
 <div class="soc" id="soc"></div>
 <div id="root"></div>
 
-<script>window.DEV_BADGE={accent:"#d8b45e",position:"right"};</script>
+<script>window.DEV_BADGE={accent:"#d8b45e",portfolio:"https://my-protfolio-space.vercel.app/"};</script>
 <script src="dev-badge.js" defer></script>
 
 <script>
@@ -238,7 +294,8 @@ const IC={
 function render(){
   const st=S.settings||{};
   if(st.about)$('#aboutTx').textContent=st.about;
-  $('#soc').innerHTML=Object.keys(IC).map(k=>U(st[k])?`<a href="${U(st[k])}" target="_blank" rel="noopener" style="background:${IC[k][0]}" aria-label="${k}"><svg viewBox="0 0 24 24"><path d="${IC[k][1]}"/></svg></a>`:'').join('');
+  const SOC_LABEL={whatsapp:'تواصل واتساب',facebook:'صفحة فيسبوك',instagram:'حساب انستجرام'};
+  $('#soc').innerHTML=Object.keys(IC).map(k=>U(st[k])?`<a href="${U(st[k])}" target="_blank" rel="noopener" style="background:${IC[k][0]}" aria-label="${SOC_LABEL[k]||k}" title="${SOC_LABEL[k]||k}" data-tip="${SOC_LABEL[k]||k}"><svg viewBox="0 0 24 24"><path d="${IC[k][1]}"/></svg></a>`:'').join('');
   const locFab=$('#locFab');
   if(locFab){
     if(U(st.location)){
@@ -265,7 +322,9 @@ function render(){
   if($('#panel'))panel();
 }
 function route(){
-  const h=(location.hash||'#home').slice(1),ok=['home','grads','events','news','chat'].includes(h)?h:'home';
+  const raw=(location.hash||'#home').slice(1);
+  if(raw==='chat'){if(typeof window.openChat==='function')window.openChat();history.replaceState(null,'',location.pathname+(location.search||''));return}
+  const h=raw,ok=['home','grads','events','news'].includes(h)?h:'home';
   document.querySelectorAll('.pg').forEach(e=>e.classList.toggle('on',e.id===ok));
   document.querySelectorAll('.navl').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+ok));
   scrollTo(0,0);
@@ -389,6 +448,10 @@ function openLogin(){
   el.addEventListener('mouseup',cancel);el.addEventListener('mouseleave',cancel);
   el.addEventListener('touchend',cancel);el.addEventListener('touchcancel',cancel);
 })();
+(function(){
+  const b=$('#brandBtn');if(!b)return;
+  b.addEventListener('click',()=>{if(typeof window.openDevCard==='function')window.openDevCard()});
+})();
 if((location.hash||'').toLowerCase()==='#x-admin'){
   history.replaceState(null,'',location.pathname+(location.search||''));
   setTimeout(openLogin,250);
@@ -505,6 +568,21 @@ document.addEventListener('click',e=>{
     }
     busy=false;
   });
+
+  const wrap=$('#chatWrap'), fab=$('#chatFab');
+  function setChat(open){
+    if(!wrap||!fab)return;
+    wrap.classList.toggle('open',open);
+    fab.classList.toggle('open',open);
+    wrap.setAttribute('aria-hidden',open?'false':'true');
+    fab.setAttribute('aria-expanded',open?'true':'false');
+    if(open)setTimeout(()=>{if(inp)inp.focus()},120);
+  }
+  window.openChat=()=>setChat(true);
+  if(fab)fab.addEventListener('click',()=>setChat(!wrap.classList.contains('open')));
+  document.querySelectorAll('[data-chat-close]').forEach(el=>el.addEventListener('click',()=>setChat(false)));
+  document.querySelectorAll('[data-openchat]').forEach(el=>el.addEventListener('click',()=>setChat(true)));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&wrap&&wrap.classList.contains('open'))setChat(false)});
 })();
 
 refresh();setInterval(refresh,15000);

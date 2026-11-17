@@ -7,7 +7,7 @@
 - `api/data.js` — خادم البيانات على Vercel (Redis / Upstash) مع التحقق من كلمة سر المشرف.
 - `api/chat.js` — المساعد الذكي.
 - `api/kb.js` — قاعدة معرفة موثوقة (تجويد، آداب، علوم القرآن).
-- `dev-badge.js` — شارة المطوّر العائمة (تظهر في كل صفحة وتوصل للبروتوفوليو).
+- `dev-badge.js` — بطاقة المطوّر المنبثقة (تُفتح عند الضغط على شعار الموقع وتوصل للبروتوفوليو).
 - `assets/` — الصور (`logo.jpg`، `art.jpg`، `dev-mazen.png`).
 
 ## المساعد الذكي — كيف يعمل
@@ -42,15 +42,19 @@ Pollinations المجاني يسمح بردّ واحد كل 45 ثانية، وه
 2. في Vercel: Settings ← Environment Variables ← أضف `GROQ_API_KEY` بقيمته.
 3. أعد النشر. سيُستخدم Groq تلقائيًا قبل Pollinations.
 
-## شارة المطوّر (dev-badge)
-مكوّن مستقل يعرض زرًا عائمًا يفتح بطاقة تعريف بالمطوّر ورابط البروتوفوليو. للتركيب في أي مشروع:
+## بطاقة المطوّر (dev-badge)
+مكوّن مستقل يعرض بطاقة تعريف بالمطوّر ورابط البروتوفوليو. لا يُضيف زرًا عائمًا؛ يُفتح برمجيًا عبر `window.openDevCard()`. في هذا الموقع تُفتح عند الضغط على شعار الدار في الشريط العلوي.
 
 ```html
-<script>window.DEV_BADGE = { accent: "#d8b45e", position: "right" };</script>
+<script>window.DEV_BADGE = { accent: "#d8b45e", portfolio: "https://my-protfolio-space.vercel.app/" };</script>
 <script src="dev-badge.js" defer></script>
+<script>document.querySelector('#brandBtn').addEventListener('click', () => window.openDevCard());</script>
 ```
 
-الإعدادات المتاحة: `name`, `nameEn`, `role`, `note`, `avatar`, `portfolio`, `github`, `email`, `whatsapp`, `accent`, `position`.
+الإعدادات المتاحة: `name`, `nameEn`, `role`, `note`, `avatar`, `portfolio`, `github`, `email`, `whatsapp`, `accent`.
+
+## المساعد كزر عائم
+المساعد ليس صفحة كاملة، بل زر عائم (`#chatFab`) يفتح لوحة تفاعلية (`#chatPanel`) من أي مكان في الموقع دون التمرير. يُفتح كذلك من بطاقة «المساعد» في الصفحة الرئيسية، ومن الرابط `#chat` مباشرة. الإغلاق بـ `Esc` أو بالضغط على الخلفية أو زر ✕.
 
 ## التشغيل
 1. **البيانات:** أنشئ قاعدة Upstash Redis، ثم في Vercel أضف المتغيّرات:
