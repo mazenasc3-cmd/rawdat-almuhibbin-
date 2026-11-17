@@ -15,10 +15,13 @@ const POLLINATIONS_URL = "https://text.pollinations.ai/openai";
 const SYSTEM_PROMPT =
   "أنت مساعد تعليمي عربي داخل موقع «دار روضة المحبين» لتحفيظ القرآن الكريم. " +
   "أجب بالعربية الفصحى المبسّطة، وافهم العامية المصرية والأخطاء الإملائية، وكن موجزًا وواضحًا ومنظّمًا بالنقاط. " +
+  "خاطِب المستخدم بأسلوب ودود وقريب من القلب وبالعامية المصرية الخفيفة (مثل: «أهلًا بيك»، «معرفش بصراحة يا صاحبي»)، وبلا تكلف أو مبالغة. " +
   "في أحكام التجويد والمسائل الشرعية اعتمد على «المعلومات الموثوقة» المرفقة والتزم بها حرفيًا، " +
-  "ولا تخترع أحكامًا أو أرقامًا أو أسماء، وإذا لم تكن متأكدًا فقل ذلك صراحةً ووجّه السائل لسؤال معلم موثوق. " +
+  "ولا تخترع أحكامًا أو أرقامًا أو أسماء، وإذا لم تكن متأكدًا فقل ذلك صراحةً بلطف ووجّه السائل لسؤال معلم موثوق. " +
   "لا تُصدر فتاوى في المسائل الشخصية، ونبّه أن الحكم النهائي لعالم موثوق. " +
-  "أجِب عن أسئلة الدار والأخبار والفعاليات من «معلومات الموقع» المرفقة فقط.";
+  "أجِب عن أسئلة الدار والأخبار والفعاليات من «معلومات الموقع» المرفقة فقط، " +
+  "وعند السؤال عن التواصل اعرض روابط أزرار التواصل المذكورة فيها كما هي، " +
+  "وإذا لم تتوفر معلومة عن الدار فاعتذر بلطف وبالعامية ووجّه المستخدم لأزرار التواصل دون اختراع أي بيانات.";
 
 function normalize(text) {
   return String(text || "")
@@ -66,15 +69,30 @@ function simpleHash(text) {
 }
 
 // ===== طبقة معلومات الدار =====
-// أسئلة التواصل والمواعيد والعنوان والتسجيل تُجاب مباشرةً من بيانات الموقع (دقيقة وفورية).
+// بيانات التواصل تُؤخذ من «أزرار التواصل» نفسها (واتساب/فيسبوك/انستجرام/الخريطة)
+// والمواعيد تُستخرج من حقل المواعيد أو من نص الإعلانات — فلا يحتاج المشرف لكتابة شيء.
+
+const SOCIAL_BUTTONS = [
+  { field: "whatsapp", label: "واتساب" },
+  { field: "facebook", label: "فيسبوك" },
+  { field: "instagram", label: "انستجرام" },
+];
+
+const TONE = {
+  hi: "أهلًا بيك 👋",
+  nope: "معرفش بصراحة يا صاحبي 🙈 المعلومة دي مش متوفرة عندي دلوقتي",
+  cta: "بس تقدر تتواصل معانا على طول من أزرار التواصل 👇",
+  help: "لو محتاج حاجة تانية اكتبلي وأنا معاك 🙌",
+};
+
 const SITE_TOPICS = [
-  { id: "contact", fields: ["phone", "email"], keys: ["تواصل", "اتواصل", "التواصل", "رقم", "تليفون", "هاتف", "موبايل", "جوال", "واتس", "واتساب", "كلم", "اتصل", "whatsapp", "phone", "contact"] },
-  { id: "hours", fields: ["hours"], keys: ["مواعيد", "موعد", "وقت", "اوقات", "امتى", "متى", "الحلقات بتبدا", "بتبدا", "بتنتهي", "دوام", "hours", "schedule", "وقت الحلقه"] },
-  { id: "address", fields: ["address", "location"], keys: ["عنوان", "مكان", "فين", "موقع", "لوكيشن", "خريطه", "الخريطه", "address", "location", "مكان الدار"] },
-  { id: "register", fields: ["register", "phone"], keys: ["تسجيل", "اسجل", "اسجل", "اشترك", "اشتراك", "التحق", "انضم", "قدم", "تقدم", "register", "join", "enroll", "اعمل ايه عشان"] },
-  { id: "teachers", fields: ["teachers"], keys: ["معلم", "معلمين", "معلمه", "معلمات", "شيخ", "شيوخ", "المدرسين", "مين بيدرس", "teachers", "المشرف"] },
-  { id: "classes", fields: ["classes", "hours"], keys: ["حلقات", "حلقه", "مراحل", "مرحله", "مستويات", "مستوي", "اطفال", "كبار", "classes", "levels", "التجويد بيتدرس"] },
-  { id: "about", fields: ["about"], keys: ["عن الدار", "الدار ايه", "ايه هي الدار", "نبذه", "بتعملوا ايه", "نشاط", "about", "الدال"] },
+  { id: "contact", keys: ["تواصل", "اتواصل", "التواصل", "رقم", "تليفون", "هاتف", "موبايل", "جوال", "واتس", "واتساب", "كلم", "اتصل", "whatsapp", "phone", "contact"] },
+  { id: "hours", keys: ["مواعيد", "موعد", "وقت", "اوقات", "امتى", "متى", "بتبدا", "بتنتهي", "دوام", "hours", "schedule", "ميعاد"] },
+  { id: "address", keys: ["عنوان", "مكان", "فين", "موقع", "لوكيشن", "خريطه", "الخريطه", "address", "location", "مكان الدار"] },
+  { id: "register", keys: ["تسجيل", "اسجل", "اشترك", "اشتراك", "التحق", "انضم", "قدم", "تقدم", "register", "join", "enroll", "اعمل ايه عشان"] },
+  { id: "teachers", keys: ["معلم", "معلمين", "معلمه", "معلمات", "شيخ", "شيوخ", "المدرسين", "مين بيدرس", "teachers", "المشرف"] },
+  { id: "classes", keys: ["حلقات", "حلقه", "مراحل", "مرحله", "مستويات", "مستوي", "اطفال", "كبار", "classes", "levels"] },
+  { id: "about", keys: ["عن الدار", "الدار ايه", "ايه هي الدار", "نبذه", "بتعملوا ايه", "نشاط", "about"] },
 ];
 
 function pickField(site, name) {
@@ -82,23 +100,67 @@ function pickField(site, name) {
   return typeof v === "string" && v.trim() ? v.trim() : "";
 }
 
+// أزرار التواصل الظاهرة في الموقع: واتساب/فيسبوك/انستجرام + الموقع على الخريطة.
+function contactButtons(s) {
+  const out = [];
+  for (const b of SOCIAL_BUTTONS) {
+    const v = pickField(s, b.field);
+    if (v) out.push({ label: b.label, url: v });
+  }
+  if (!out.some((x) => x.label === "واتساب")) {
+    const digits = pickField(s, "phone").replace(/[^\d]/g, "");
+    if (digits) out.unshift({ label: "واتساب", url: "https://wa.me/" + digits });
+  }
+  const loc = pickField(s, "location");
+  if (loc) out.push({ label: "موقع الدار على الخريطة", url: loc });
+  return out;
+}
+
+function buttonLines(s) {
+  return contactButtons(s).map((b) => "• " + b.label + ": " + b.url).join("\n");
+}
+
+const TIME_HINTS =
+  /(الساع|الساعه|\d{1,2}\s*[:.]\s*\d{2}|صباح|مساء|عصر|ظهر|مغرب|عشاء|فجر|من\s+ال|بعد\s+ال|قبل\s+ال|يومي|اسبوع|أسبوع|السبت|الاحد|الأحد|الاثنين|الإثنين|الثلاثاء|الاربعاء|الأربعاء|الخميس|الجمعة|الجمعه|كل\s+يوم|ميعاد|مواعيد|يبدا|تبدا|ينتهي|تنتهي)/;
+
+// المواعيد: من حقل المواعيد أولًا، وإلا من نص الإعلانات/الأحداث اللي فيها وقت.
+function extractSchedule(s, posts, events) {
+  const direct = pickField(s, "hours");
+  if (direct) return direct;
+  const scan = [...(Array.isArray(posts) ? posts : []), ...(Array.isArray(events) ? events : [])];
+  for (const item of scan) {
+    const text = [item?.title, item?.text].filter((x) => typeof x === "string" && x.trim()).join(" — ").trim();
+    if (text && (TIME_HINTS.test(text) || TIME_HINTS.test(normalize(text)))) return text;
+  }
+  return "";
+}
+
+// رسالة لطيفة عند غياب المعلومة، مع توجيه لأزرار التواصل إن وُجدت.
+function friendlyMiss(s, reason = "") {
+  const btns = contactButtons(s);
+  const tail = btns.length ? TONE.cta + "\n" + buttonLines(s) : "بس تقدر تسأل حد من الدار على طول 🙏";
+  const head = reason ? TONE.hi + "\nمعرفش بصراحة يا صاحبي 🙈 " + reason : TONE.hi + "\n" + TONE.nope;
+  return head + ".\n" + tail;
+}
+
 function buildSiteText(site) {
   if (!site || typeof site !== "object") return "";
   const s = site.settings || site;
+  const btns = contactButtons(s);
+  const sch = extractSchedule(s, site.posts, site.events);
   const lines = [
     "اسم الدار: دار روضة المحبين — دار لتحفيظ القرآن الكريم وتعليم أحكام التلاوة.",
     pickField(s, "about") ? "نبذة الدار: " + pickField(s, "about") : "",
     pickField(s, "address") ? "العنوان: " + pickField(s, "address") : "",
-    pickField(s, "phone") ? "الهاتف/واتساب: " + pickField(s, "phone") : "",
+    btns.length
+      ? "أزرار التواصل المتاحة في الموقع (استخدمها عند سؤال المستخدم عن التواصل): " +
+        btns.map((b) => b.label + " (" + b.url + ")").join("، ")
+      : "",
     pickField(s, "email") ? "البريد الإلكتروني: " + pickField(s, "email") : "",
-    pickField(s, "hours") ? "مواعيد العمل والحلقات: " + pickField(s, "hours") : "",
+    sch ? "المواعيد: " + sch : "",
     pickField(s, "classes") ? "الحلقات والمراحل: " + pickField(s, "classes") : "",
     pickField(s, "teachers") ? "المعلمون: " + pickField(s, "teachers") : "",
     pickField(s, "register") ? "كيفية التسجيل: " + pickField(s, "register") : "",
-    pickField(s, "location") ? "رابط موقع الدار على الخريطة: " + pickField(s, "location") : "",
-    pickField(s, "whatsapp") ? "رابط واتساب: " + pickField(s, "whatsapp") : "",
-    pickField(s, "facebook") ? "رابط فيسبوك: " + pickField(s, "facebook") : "",
-    pickField(s, "instagram") ? "رابط انستجرام: " + pickField(s, "instagram") : "",
   ];
   const grads = Array.isArray(site.graduates) ? site.graduates.slice(0, 12) : [];
   const events = Array.isArray(site.events) ? site.events.slice(0, 10) : [];
@@ -109,28 +171,12 @@ function buildSiteText(site) {
   return lines.filter(Boolean).join("\n");
 }
 
-function contactLine(s) {
-  const bits = [];
-  if (pickField(s, "phone")) bits.push("الهاتف/واتساب: " + pickField(s, "phone"));
-  if (pickField(s, "email")) bits.push("البريد: " + pickField(s, "email"));
-  return bits.join(" — ");
-}
-
-const TOPIC_INTRO = {
-  contact: "للتواصل مع الدار:",
-  hours: "مواعيد الدار والحلقات:",
-  address: "عنوان الدار وموقعها:",
-  register: "للالتحاق والتسجيل:",
-  teachers: "المعلمون في الدار:",
-  classes: "الحلقات والمراحل:",
-  about: "نبذة عن الدار:",
-};
-
 // يُرجع إجابة مباشرة من بيانات الموقع، أو null إذا لم يتعلق السؤال بالدار.
 function answerFromSite(question, site) {
   const s = site?.settings || site || {};
   const q = normalize(question);
   if (!q) return null;
+
   let best = null;
   for (const topic of SITE_TOPICS) {
     const score = topic.keys.reduce((acc, key) => {
@@ -141,20 +187,70 @@ function answerFromSite(question, site) {
   }
   if (!best) return null;
 
-  const { topic } = best;
-  const parts = [];
-  for (const field of topic.fields) {
-    const v = pickField(s, field);
-    if (v) parts.push(field === "location" ? "الخريطة: " + v : field === "phone" ? "الهاتف/واتساب: " + v : field === "email" ? "البريد الإلكتروني: " + v : v);
+  const btns = contactButtons(s);
+  const btnBlock = btns.length ? buttonLines(s) : "";
+
+  switch (best.topic.id) {
+    case "contact": {
+      if (!btns.length) {
+        return (
+          TONE.hi +
+          "\n" +
+          TONE.nope +
+          ".\nجرّب تبص على صفحة الموقع أو تسأل حد من الدار على طول 🙏"
+        );
+      }
+      return TONE.hi + " تقدر تتواصل معانا بسهولة من الأزرار دي:\n" + btnBlock + "\n" + TONE.help;
+    }
+    case "hours": {
+      const sch = extractSchedule(s, site?.posts, site?.events);
+      if (sch) {
+        return TONE.hi + "\nالمواعيد عندنا كالتالي: " + sch + "\nلو عايز تتأكد أكتر، كلمنا من أزرار التواصل 👇\n" + btnBlock;
+      }
+      return friendlyMiss(s, "مفيش مواعيد مكتوبة عندي");
+    }
+    case "address": {
+      const addr = pickField(s, "address");
+      const loc = pickField(s, "location");
+      if (addr || loc) {
+        let r = TONE.hi + "\nعنوان الدار: " + (addr || "شوف الموقع على الخريطة");
+        if (loc) r += "\n📍 الخريطة: " + loc;
+        return r;
+      }
+      return friendlyMiss(s, "مفيش عنوان مسجّل عندي");
+    }
+    case "register": {
+      const reg = pickField(s, "register");
+      if (reg) {
+        return TONE.hi + "\nللتسجيل في الدار: " + reg + (btnBlock ? "\n" + TONE.cta + "\n" + btnBlock : "");
+      }
+      return (
+        TONE.hi +
+        "\nالتسجيل متاح إن شاء الله 👍" +
+        (btnBlock ? " " + TONE.cta + "\n" + btnBlock : " اسأل حد من الدار للتفاصيل 🙏")
+      );
+    }
+    case "teachers": {
+      const t = pickField(s, "teachers");
+      if (t) return TONE.hi + "\nالمعلمون في الدار: " + t;
+      return friendlyMiss(s, "مفيش أسماء معلمين عندي");
+    }
+    case "classes": {
+      const c = pickField(s, "classes");
+      if (c) return TONE.hi + "\nالحلقات والمراحل عندنا: " + c;
+      return friendlyMiss(s, "مفيش تفاصيل حلقات عندي");
+    }
+    case "about": {
+      const a = pickField(s, "about");
+      if (a) return TONE.hi + "\n" + a;
+      return (
+        TONE.hi +
+        "\nإحنا دار روضة المحبين، دار لتحفيظ القرآن الكريم وتعليم أحكام التلاوة بإشراف نخبة من المعلمين والمعلمات."
+      );
+    }
+    default:
+      return null;
   }
-  const intro = TOPIC_INTRO[topic.id] || "";
-  if (!parts.length) {
-    const contact = contactLine(s);
-    return (intro ? intro + "\n" : "") +
-      "لا تتوفر لدي هذه المعلومة بالتفصيل حاليًا. " +
-      (contact ? "يمكنك التواصل مباشرةً: " + contact : "يمكنك التواصل مع الدار عبر بيانات التواصل في صفحة الموقع.");
-  }
-  return (intro ? intro + "\n" : "") + parts.join("\n");
 }
 
 
@@ -281,9 +377,9 @@ export default async function handler(req, res) {
 
   if (!reply) {
     reply =
-      "لم أجد إجابة مؤكدة لهذا السؤال، وتعذّر الوصول للمساعد الذكي الآن.\n" +
-      "جرّب سؤالًا عن: أحكام النون الساكنة، المدود، القلقلة، مخارج الحروف، آداب التلاوة، أو خطط حفظ القرآن.\n" +
-      "ويمكنك أيضًا السؤال عن الدار: التواصل، المواعيد، العنوان، وطريقة التسجيل.";
+      "أهلًا بيك 👋\nمعرفش بصراحة يا صاحبي 🙈 مش لاقي إجابة مؤكدة للسؤال ده دلوقتي.\n" +
+      "جرّب تسألني عن: أحكام النون الساكنة، المدود، القلقلة، مخارج الحروف، آداب التلاوة، أو خطط حفظ القرآن.\n" +
+      "أو اسألني عن الدار: التواصل، المواعيد، العنوان، وطريقة التسجيل — وأنا معاك 🙌";
     source = "offline";
   }
 

@@ -283,7 +283,7 @@ function panel(){
   let h=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="color:var(--g);font-size:22px">لوحة الإشراف</h2><span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn d sm" id="admLogout">خروج</button><button class="btn s" id="x" style="color:var(--tx);border-color:var(--bd)">إغلاق ✕</button></span></div><div class="tabs">${visTabs().map(([k,l])=>`<button class="btn ${k===tab?'on':''}" data-t="${k}">${l}</button>`).join('')}</div>`;
   if(tab==='settings'){
     const s=S.settings||{};
-    h+=`<div class="card" style="max-width:520px">${[['about','نبذة عن الدار','ta'],['phone','رقم الهاتف / واتساب'],['email','البريد الإلكتروني'],['address','العنوان','ta'],['hours','مواعيد العمل والحلقات','ta'],['classes','الحلقات والمراحل','ta'],['teachers','المعلمون','ta'],['register','كيفية التسجيل والالتحاق','ta'],['whatsapp','رابط واتساب'],['facebook','رابط فيسبوك'],['instagram','رابط انستجرام'],['location','رابط الموقع على الخريطة (جوجل مابس)']].map(([k,l,t])=>`<label>${l}</label>${t?`<textarea data-s="${k}">${esc(s[k]||'')}</textarea>`:`<input dir="ltr" data-s="${k}" value="${esc(s[k]||'')}" autocomplete="off">`}`).join('')}<br><button class="btn" id="ss">حفظ</button></div>`;
+    h+=`<div class="card" style="max-width:520px"><p class="mu" style="margin:0 0 10px">💡 بيانات التواصل ياخدها المساعد تلقائيًا من أزرار التواصل تحت — مش محتاج تكتبها. المواعيد كذلك تُقرأ من الإعلانات لو موجودة.</p>${[['about','نبذة عن الدار','ta'],['address','العنوان','ta'],['hours','مواعيد العمل والحلقات (اختياري — تُقرأ من الإعلانات تلقائيًا)','ta'],['classes','الحلقات والمراحل','ta'],['teachers','المعلمون','ta'],['register','كيفية التسجيل والالتحاق','ta'],['whatsapp','رابط واتساب'],['facebook','رابط فيسبوك'],['instagram','رابط انستجرام'],['location','رابط الموقع على الخريطة (جوجل مابس)']].map(([k,l,t])=>`<label>${l}</label>${t?`<textarea data-s="${k}">${esc(s[k]||'')}</textarea>`:`<input dir="ltr" data-s="${k}" value="${esc(s[k]||'')}" autocomplete="off">`}`).join('')}<br><button class="btn" id="ss">حفظ</button></div>`;
   } else {
     const c=CF[tab];let rows=S[tab]||[];if(tab==='graduates')rows=[...rows].sort((a,b)=>(+b.num||0)-(+a.num||0));
     const cols=c.f.filter(f=>!['ta','img','aud'].includes(f[2]));
@@ -425,7 +425,7 @@ document.addEventListener('click',e=>{
     d.innerHTML='<div class="who">'+(role==='user'?'أنت':'مساعد الدار')+'</div>'+esc(text);
     log.appendChild(d);log.scrollTop=log.scrollHeight;
   };
-  add('bot','السلام عليكم\nأنا مساعد دار روضة المحبين. اسألني عن التجويد وعلوم القرآن، أو عن الدار: التواصل، المواعيد، العنوان، وطريقة التسجيل.');
+  add('bot','السلام عليكم وأهلًا بيك 👋\nأنا مساعد دار روضة المحبين. اسألني عن التجويد وعلوم القرآن، أو عن الدار: التواصل، المواعيد، العنوان، وطريقة التسجيل — وأنا معاك 🙌');
   let aiLoading=false;
 
   function siteContext(){
@@ -487,21 +487,21 @@ document.addEventListener('click',e=>{
     e.preventDefault();
     const msg=inp.value.trim();if(!msg||busy)return;
     busy=true;inp.value='';add('user',msg);
-    const wait=document.createElement('div');wait.className='chat-msg bot';wait.innerHTML='<div class="who">مساعد الدار</div><span class="thinking">جاري التفكير والبحث في معلومات الدار...</span>';log.appendChild(wait);log.scrollTop=log.scrollHeight;
+    const wait=document.createElement('div');wait.className='chat-msg bot';wait.innerHTML='<div class="who">مساعد الدار</div><span class="thinking">ثانية واحدة بدوّرلك على الإجابة... 🔎</span>';log.appendChild(wait);log.scrollTop=log.scrollHeight;
     try{
       let reply;
       try{
         reply=await askServerAI(msg);
       }catch(aiErr){
         console.error(aiErr);
-        reply='حصلت مشكلة مؤقتة في خادم المساعد. جرّب مرة أخرى بعد لحظات.';
+        reply='أوه 🙈 حصلت مشكلة مؤقتة عندي. جرّب تبعت السؤال تاني بعد لحظات، وأنا آسف على الإزعاج 🙏';
       }
       wait.remove();
       add('bot',reply);
       hist.push({role:'user',content:msg},{role:'assistant',content:reply});
       if(hist.length>16)hist=hist.slice(-16);
     }catch(err){
-      wait.remove();add('bot','عذرًا، لم أستطع فهم السؤال. جرّب صياغته بطريقة أخرى.');
+      wait.remove();add('bot','معلش مش فاهم السؤال كويس 🙈 جرّب تصيغه بطريقة تانية وأنا معاك.');
     }
     busy=false;
   });
