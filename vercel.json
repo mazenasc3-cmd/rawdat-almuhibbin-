@@ -3,6 +3,21 @@
   "functions": {
     "api/chat.js": {
       "maxDuration": 60
+    },
+    "api/push.js": {
+      "maxDuration": 30
+    },
+    "api/data.js": {
+      "maxDuration": 30
     }
-  }
+  },
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    }
+  ]
 }

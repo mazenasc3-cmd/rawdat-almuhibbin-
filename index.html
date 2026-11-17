@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>دار روضة المحبين لتحفيظ القرآن الكريم</title>
+<link rel="icon" href="assets/logo.jpg">
+<link rel="apple-touch-icon" href="assets/logo.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -136,6 +138,26 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 .chat-sugs button:active{background:var(--g);color:#fff;border-color:var(--g)}
 .brand{user-select:none;-webkit-user-select:none}
 .ft-dev{opacity:.85;font-size:12px;margin-top:8px;display:inline-block;cursor:default;-webkit-user-select:none;user-select:none}
+.notif-fab{position:fixed;right:12px;bottom:calc(148px + env(safe-area-inset-bottom,0px));z-index:46;width:54px;height:54px;border-radius:50%;border:2px solid #ffffff4d;background:linear-gradient(145deg,var(--g),var(--g2));color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 24px #0006;transition:transform .3s cubic-bezier(.19,1,.22,1),box-shadow .3s ease,background .3s ease,color .3s ease}
+.notif-fab[hidden]{display:none}
+.notif-fab:hover,.notif-fab:focus-visible{transform:translateY(-3px) scale(1.08);box-shadow:0 12px 30px #0007}
+.notif-fab:active{transform:scale(.94)}
+.notif-fab svg{width:24px;height:24px;fill:currentColor}
+.notif-fab.on{background:linear-gradient(145deg,var(--gold),#d8b45e);color:#23322d;border-color:#ffffff7a}
+.notif-fab:not(.on):after{content:'';position:absolute;top:5px;right:5px;width:12px;height:12px;border-radius:50%;background:#e53935;border:2px solid var(--card);animation:notifPulse 2s ease-in-out infinite}
+@keyframes notifPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:.7}}
+.nf{position:fixed;inset:0;background:#0008;z-index:60;display:none;place-items:center;padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
+.nf.open{display:grid}
+.nf>div{background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);padding:20px;width:min(430px,100%);max-height:min(90vh,900px);overflow:auto;text-align:center}
+.nf h3{color:var(--g);font-size:22px}
+.nf p{color:var(--mu);font-size:14px;margin:8px 0 14px}
+.nf .nf-ic{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center;background:linear-gradient(145deg,var(--g),var(--g2));color:#fff}
+.nf .nf-ic svg{width:30px;height:30px;fill:currentColor}
+.nf .nf-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.nf .nf-note{font-size:12.5px;color:var(--mu);margin-top:12px;line-height:1.7}
+.nf-status{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;border-radius:999px;padding:4px 12px;margin-bottom:6px}
+.nf-status.on{background:#0d4a3e1a;color:var(--g)}
+.nf-status.off{background:#e539351a;color:#c62828}
 
 @media(max-width:900px){
   .qk{grid-template-columns:repeat(3,1fr);gap:10px}
@@ -165,6 +187,10 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
   .chat-fab{right:10px;bottom:calc(74px + env(safe-area-inset-bottom,0px));height:48px;padding:0 14px 0 12px;font-size:13px}
   .chat-fab__label{display:inline}
   .chat-fab svg{width:21px;height:21px}
+  .notif-fab{right:12px;bottom:calc(132px + env(safe-area-inset-bottom,0px));width:48px;height:48px}
+  .notif-fab svg{width:22px;height:22px}
+  .nf>div{padding:16px;border-radius:12px 12px 0 0;align-self:end}
+  .nf{align-items:end}
   .chat-panel{width:100%;max-height:min(92vh,100%);margin:0;border-radius:18px 18px 0 0}
   .chat-wrap{align-items:flex-end}
   .chat-panel{transform:translateY(40px)}
@@ -269,6 +295,19 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 
 <div class="loc-bar" id="locBar" hidden></div>
 <div class="loc-fab" id="locFab" hidden></div>
+<button class="notif-fab" id="notifFab" type="button" aria-label="تشغيل الإشعارات" title="فعّل الإشعارات ليصلك كل جديد" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zm7-5.5V11a7 7 0 0 0-5.5-6.83V3.5a1.5 1.5 0 0 0-3 0v.67A7 7 0 0 0 5 11v5.5l-1.3 1.3a1 1 0 0 0 .7 1.7h15.2a1 1 0 0 0 .7-1.7L19 16.5z"/></svg>
+</button>
+<div class="nf" id="notifModal" role="dialog" aria-modal="true" aria-label="تفعيل الإشعارات">
+  <div>
+    <div class="nf-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zm7-5.5V11a7 7 0 0 0-5.5-6.83V3.5a1.5 1.5 0 0 0-3 0v.67A7 7 0 0 0 5 11v5.5l-1.3 1.3a1 1 0 0 0 .7 1.7h15.2a1 1 0 0 0 .7-1.7L19 16.5z"/></svg></div>
+    <h3 id="nfTitle">تفعيل الإشعارات</h3>
+    <div id="nfStatus"></div>
+    <p id="nfText">فعّل الإشعارات ليصلك أول بأول بكل إعلان أو حفلة أو إضافة جديدة على الموقع.</p>
+    <div class="nf-actions" id="nfActions"></div>
+    <div class="nf-note" id="nfNote">الإشعارات تظهر على جهازك حتى لو الموقع مغلق، ويمكنك إلغاؤها في أي وقت من هنا.</div>
+  </div>
+</div>
 <footer>
   <span class="lgw"><img src="assets/logo.jpg" alt=""></span><br>
   جميع الحقوق محفوظة © دار روضة المحبين — إدارة الشيخ مصطفى محمود الشال<br>
@@ -342,6 +381,7 @@ function panel(){
   let h=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="color:var(--g);font-size:22px">لوحة الإشراف</h2><span style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn d sm" id="admLogout">خروج</button><button class="btn s" id="x" style="color:var(--tx);border-color:var(--bd)">إغلاق ✕</button></span></div><div class="tabs">${visTabs().map(([k,l])=>`<button class="btn ${k===tab?'on':''}" data-t="${k}">${l}</button>`).join('')}</div>`;
   if(tab==='settings'){
     const s=S.settings||{};
+    h+=`<div class="card" style="max-width:520px;margin-bottom:12px"><h3 style="color:var(--g);margin-bottom:6px">🔔 إشعارات الزوار</h3><p class="mu" style="margin:0 0 10px">لما تضيف أو تعدّل إعلان/حفلة/خاتم، بيوصل إشعار تلقائيًا لكل الزوار اللي فعّلوا الإشعارات. العدد الحالي: <b id="nfCount">...</b></p><button class="btn s" id="nfTest" style="color:var(--tx);border-color:var(--bd)">إرسال إشعار تجريبي</button></div>`;
     h+=`<div class="card" style="max-width:520px"><p class="mu" style="margin:0 0 10px">💡 بيانات التواصل ياخدها المساعد تلقائيًا من أزرار التواصل تحت — مش محتاج تكتبها. المواعيد كذلك تُقرأ من الإعلانات لو موجودة.</p>${[['about','نبذة عن الدار','ta'],['address','العنوان','ta'],['hours','مواعيد العمل والحلقات (اختياري — تُقرأ من الإعلانات تلقائيًا)','ta'],['classes','الحلقات والمراحل','ta'],['teachers','المعلمون','ta'],['register','كيفية التسجيل والالتحاق','ta'],['whatsapp','رابط واتساب'],['facebook','رابط فيسبوك'],['instagram','رابط انستجرام'],['location','رابط الموقع على الخريطة (جوجل مابس)']].map(([k,l,t])=>`<label>${l}</label>${t?`<textarea data-s="${k}">${esc(s[k]||'')}</textarea>`:`<input dir="ltr" data-s="${k}" value="${esc(s[k]||'')}" autocomplete="off">`}`).join('')}<br><button class="btn" id="ss">حفظ</button></div>`;
   } else {
     const c=CF[tab];let rows=S[tab]||[];if(tab==='graduates')rows=[...rows].sort((a,b)=>(+b.num||0)-(+a.num||0));
@@ -354,6 +394,19 @@ function panel(){
   p.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>form(tab,(S[tab]||[]).find(r=>r.id===b.dataset.e)));
   p.querySelectorAll('[data-d]').forEach(b=>b.onclick=async()=>{if(confirm('تأكيد الحذف؟'))try{await api({op:'del',coll:tab,id:b.dataset.d});await refresh()}catch(e){alert('غير مسموح: '+e.message)}});
   const ss=p.querySelector('#ss');if(ss)ss.onclick=async()=>{const d={};p.querySelectorAll('[data-s]').forEach(i=>d[i.dataset.s]=i.value.trim());try{await api({op:'put',coll:'settings',item:d});await refresh();alert('تم الحفظ ✓')}catch(e){alert('غير مسموح: '+e.message)}};
+  const nfT=p.querySelector('#nfTest');
+  if(nfT)nfT.onclick=async()=>{
+    nfT.disabled=true;const t0=nfT.textContent;nfT.textContent='جاري الإرسال...';
+    try{
+      const r=await fetch('/api/push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({test:1,who:A&&A.who,pass:A&&A.pass})});
+      const j=await r.json().catch(()=>({}));
+      if(!r.ok)throw new Error(j.error==='push-not-configured'?'الإشعارات غير مهيّأة على السيرفر':(j.error||('خطأ '+r.status)));
+      alert(j.total?`تم الإرسال ✓ (${j.sent} من ${j.total})`:'لا يوجد زوار مفعّلون للإشعارات بعد.');
+    }catch(e){alert('تعذّر الإرسال: '+e.message)}
+    finally{nfT.disabled=false;nfT.textContent=t0}
+  };
+  const nfC=p.querySelector('#nfCount');
+  if(nfC)fetch('/api/push',{cache:'no-store'}).then(r=>r.json()).then(j=>{nfC.textContent=(j&&typeof j.count==='number')?j.count:'—'}).catch(()=>{nfC.textContent='—'});
 }
 function form(coll,rec){
   const c=CF[coll],r=rec||{};
@@ -586,6 +639,121 @@ document.addEventListener('click',e=>{
 })();
 
 refresh();setInterval(refresh,15000);
+
+/* ===== إشعارات الويب (Web Push) ===== */
+(function(){
+  const fab=$('#notifFab'), modal=$('#notifModal');
+  if(!fab||!modal)return;
+  const titleEl=$('#nfTitle'), statusEl=$('#nfStatus'), textEl=$('#nfText'), actionsEl=$('#nfActions'), noteEl=$('#nfNote');
+  const supported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone===true;
+
+  if(!supported){
+    if(isIOS && !standalone){
+      fab.hidden=false;
+      fab.addEventListener('click',()=>openModal(true));
+    }
+    return;
+  }
+
+  let reg=null, sub=null, publicKey='';
+  const b64ToU8=(b64)=>{
+    const pad='='.repeat((4-b64.length%4)%4);
+    const raw=atob((b64+pad).replace(/-/g,'+').replace(/_/g,'/'));
+    const out=new Uint8Array(raw.length);
+    for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);
+    return out;
+  };
+  const urlBase64=()=>b64ToU8(publicKey);
+
+  async function loadKey(){
+    if(publicKey)return publicKey;
+    try{
+      const r=await fetch('/api/push',{cache:'no-store'});
+      const j=await r.json();
+      publicKey=(j&&j.publicKey)||'';
+    }catch(e){publicKey='';}
+    return publicKey;
+  }
+
+  function paint(){
+    const on=!!sub && Notification.permission==='granted';
+    fab.classList.toggle('on',on);
+    fab.hidden=false;
+    fab.setAttribute('aria-label',on?'الإشعارات مفعّلة':'تفعيل الإشعارات');
+    fab.title=on?'الإشعارات مفعّلة — اضغط للإدارة':'فعّل الإشعارات ليصلك كل جديد';
+    if(on){titleEl.textContent='الإشعارات مفعّلة ✓';statusEl.innerHTML='<span class="nf-status on">🔔 مُفعّلة</span>';textEl.textContent='هيوصلك إشعار فورًا مع كل إعلان أو حفلة أو إضافة جديدة على الموقع.';actionsEl.innerHTML='<button class="btn d" id="nfOff">إلغاء الإشعارات</button><button class="btn s" id="nfClose" style="color:var(--tx);border-color:var(--bd)">إغلاق</button>';noteEl.textContent='يمكنك تفعيلها مرة أخرى في أي وقت من نفس الزر.';}
+    else{titleEl.textContent='تفعيل الإشعارات';statusEl.innerHTML='<span class="nf-status off">🔕 غير مفعّلة</span>';textEl.textContent='فعّل الإشعارات ليصلك أول بأول بكل إعلان أو حفلة أو إضافة جديدة على الموقع.';actionsEl.innerHTML='<button class="btn" id="nfOn">🔔 تفعيل الإشعارات</button><button class="btn s" id="nfClose" style="color:var(--tx);border-color:var(--bd)">لاحقًا</button>';noteEl.textContent='الإشعارات تظهر على جهازك حتى لو الموقع مغلق، ويمكنك إلغاؤها في أي وقت.';}
+    const on2=$('#nfOn'), off=$('#nfOff'), cl=$('#nfClose');
+    if(on2)on2.onclick=()=>enable();
+    if(off)off.onclick=()=>disable();
+    if(cl)cl.onclick=()=>close();
+  }
+  function openModal(iosHint){
+    if(iosHint){
+      titleEl.textContent='تفعيل الإشعارات';
+      statusEl.innerHTML='<span class="nf-status off">📱 آيفون</span>';
+      textEl.textContent='على الآيفون: افتح الموقع من Safari، اضغط زر المشاركة ⬆️ ثم «إضافة إلى الشاشة الرئيسية»، وبعدها افتحه من الأيقونة وفعّل الإشعارات.';
+      actionsEl.innerHTML='<button class="btn s" id="nfClose" style="color:var(--tx);border-color:var(--bd)">حسنًا</button>';
+      noteEl.textContent='ده شرط من آبل — الإشعارات تشتغل من الأيقونة على الشاشة الرئيسية.';
+      $('#nfClose').onclick=()=>close();
+    }
+    modal.classList.add('open');
+    if(!iosHint)paint();
+  }
+  function close(){modal.classList.remove('open');}
+
+  async function enable(){
+    try{
+      const key=await loadKey();
+      if(!key){alert('الإشعارات غير مهيّأة حاليًا. حاول لاحقًا.');return;}
+      const perm=await Notification.requestPermission();
+      if(perm!=='granted'){paint();noteEl.textContent='لم يتم منح الإذن. يمكنك السماح بالإشعارات من إعدادات المتصفح.';return;}
+      reg=reg||await navigator.serviceWorker.register('/sw.js',{scope:'/'});
+      await navigator.serviceWorker.ready;
+      sub=await reg.pushManager.getSubscription();
+      if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64()});
+      const r=await fetch('/api/push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sub:sub.toJSON()})});
+      if(!r.ok)throw new Error('save');
+      paint();
+    }catch(e){
+      noteEl.textContent='تعذّر تفعيل الإشعارات: '+(e&&e.message?e.message:'خطأ');
+    }
+  }
+
+  async function disable(){
+    try{
+      sub=sub||await (reg&&reg.pushManager?reg.pushManager.getSubscription():Promise.resolve(null));
+      if(sub){
+        await fetch('/api/push',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({unsubscribe:true,endpoint:sub.endpoint})});
+        await sub.unsubscribe();
+        sub=null;
+      }
+      paint();
+    }catch(e){noteEl.textContent='تعذّر الإلغاء: '+(e&&e.message?e.message:'خطأ');}
+  }
+
+  async function boot(){
+    fab.hidden=false;
+    paint();
+    try{
+      reg=await navigator.serviceWorker.register('/sw.js',{scope:'/'});
+      await navigator.serviceWorker.ready;
+      sub=await reg.pushManager.getSubscription();
+      if(!sub && Notification.permission==='granted'){
+        const key=await loadKey();
+        if(key){try{sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64()});}catch(e){sub=null;}}
+      }
+    }catch(e){reg=null;}
+    paint();
+  }
+  fab.addEventListener('click',()=>openModal());
+  modal.addEventListener('click',e=>{if(e.target===modal)close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))close();});
+  boot();
+})();
+
 </script>
 </body>
 </html>
