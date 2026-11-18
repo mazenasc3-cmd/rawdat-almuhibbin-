@@ -1,1 +1,22 @@
-PLACEHOLDER_WILL_FAIL
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>دار روضة المحبين</title></head>
+<body>
+<p style="font-family:Tahoma;text-align:center;padding:40px">جاري تحميل الموقع...</p>
+<script>
+(async()=>{
+  const urls=[
+    "https://cdn.jsdelivr.net/gh/mazenasc3-cmd/rawdat-almuhibbin-@533db210b53ca0678b395bf000bdf484b022ddbe/index.html",
+    "https://raw.githack.com/mazenasc3-cmd/rawdat-almuhibbin-/533db210b53ca0678b395bf000bdf484b022ddbe/index.html"
+  ];
+  for(const u of urls){
+    try{
+      const t=await fetch(u).then(r=>r.text());
+      if(t&&t.includes("chatFab")){document.open();document.write(t);document.close();return;}
+    }catch(e){}
+  }
+  document.body.innerHTML="<p style=\"text-align:center;padding:40px;font-family:Tahoma\">تعذر التحميل. حدّث الصفحة.</p>";
+})();
+</script>
+</body></html>
