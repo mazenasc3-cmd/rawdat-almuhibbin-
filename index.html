@@ -67,13 +67,13 @@ section>h2:after{content:"";display:block;width:56px;height:3px;background:var(-
 .loc-fab a:after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid #e53935;opacity:.8;animation:locPulse 2.4s ease-out infinite}
 @keyframes locPulse{0%{transform:scale(1);opacity:.7}70%{transform:scale(1.4);opacity:0}100%{opacity:0}}
 .loc-bar{display:none!important}
-.contact-card{display:flex;align-items:center;gap:12px;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
-.contact-card:hover,.contact-card:focus-visible{transform:translateY(-3px);box-shadow:0 10px 26px #0003;border-color:var(--gold)}
-.cc-ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;box-shadow:0 4px 12px #0003}
-.cc-ic svg{width:24px;height:24px;fill:#fff}
-.cc-tx{display:flex;flex-direction:column;gap:2px}
-.cc-tx b{color:var(--g);font-size:16px}
-.cc-tx small{color:var(--mu);font-size:12.5px}
+.ft-contact{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.ft-contact-t{font-size:13px;letter-spacing:.06em;opacity:.95;font-weight:700}
+.ft-soc{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.ft-soc a{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;text-decoration:none;border:2px solid #ffffff40;box-shadow:0 4px 14px #0004;transition:transform .28s cubic-bezier(.19,1,.22,1),box-shadow .28s ease,filter .28s ease}
+.ft-soc a:hover,.ft-soc a:focus-visible{transform:translateY(-3px) scale(1.1);box-shadow:0 10px 24px #0006;filter:saturate(1.2) brightness(1.08)}
+.ft-soc a:active{transform:scale(.93)}
+.ft-soc a svg{width:22px;height:22px;fill:#fff}
 .chat-link{color:var(--g);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 footer{background:var(--g);color:#fff;text-align:center;padding:24px var(--pad) calc(32px + env(safe-area-inset-bottom,0px));font-size:13px;position:relative;z-index:5;line-height:1.85}
 .ov{position:fixed;inset:0;background:var(--bg);z-index:50;overflow:auto;padding:var(--pad);padding-top:calc(var(--pad) + env(safe-area-inset-top,0px));padding-bottom:calc(var(--pad) + env(safe-area-inset-bottom,0px))}
@@ -230,7 +230,6 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
   <a href="#grads" class="navl">الخاتمون</a>
   <a href="#events" class="navl">الحفلات</a>
   <a href="#news" class="navl">الأخبار</a>
-  <a href="#contact" class="navl">تواصل معنا</a>
 </nav>
 
 <div class="pg on" id="home">
@@ -272,7 +271,6 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
 </section>
 <section class="pg" id="events"><h2>الحفلات والمسابقات</h2><div class="grid" id="evtG"></div></section>
 <section class="pg" id="news"><h2>الإعلانات والتحديثات</h2><div class="grid" id="newsG"></div></section>
-<section class="pg" id="contact"><h2>تواصل معنا</h2><p class="mu" style="text-align:center;max-width:560px;margin:6px auto 0">يسعدنا تواصلك معنا في أي وقت — اختر الوسيلة الأنسب لك.</p><div class="grid" id="contactG"></div></section>
 <!-- لوحة المساعد العائمة -->
 <button class="chat-fab" id="chatFab" type="button" aria-label="المساعد التعليمي" aria-expanded="false">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.9 3 3 6.3 3 10.3c0 2.2 1.2 4.2 3.2 5.5-.1 1-.6 2.2-1.4 3.1-.2.2 0 .6.3.6 1.8-.1 3.3-.9 4.2-1.6.9.2 1.8.3 2.7.3 5.1 0 9-3.3 9-7.6S17.1 3 12 3z"/></svg>
@@ -323,6 +321,10 @@ input,select,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-
   <span class="lgw"><img src="assets/logo.jpg" alt=""></span><br>
   جميع الحقوق محفوظة © دار روضة المحبين — إدارة الشيخ مصطفى محمود الشال<br>
   <span class="ft-dev" id="ftDev">Developed by .ENG\Mazen Medhat — <a href="https://my-protfolio-space.vercel.app/" target="_blank" rel="noopener">الملف الشخصي</a></span>
+  <div class="ft-contact" id="contact" hidden>
+    <b class="ft-contact-t">Contact us :</b>
+    <div class="ft-soc" id="contactG"></div>
+  </div>
 </footer>
 <div class="soc" id="soc"></div>
 <div id="root"></div>
@@ -342,15 +344,16 @@ const IC={
   instagram:['#E1306C','M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3.500a4.500 4.500 0 1 1 0 9 4.500 4.500 0 0 1 0-9zm0 2a2.500 2.500 0 1 0 0 5 2.500 2.500 0 0 0 0-5zM17.500 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z']
 };
 function renderContact(st){
-  const g=$('#contactG');
+  const g=$('#contactG'),box=$('#contact');
   if(!g)return;
-  const cards=[];
+  const items=[];
   const wa=U(st.whatsapp)||(st.phone?'https://wa.me/'+String(st.phone).replace(/[^\d]/g,''):'');
-  if(wa)cards.push([IC.whatsapp[0],IC.whatsapp[1],'واتساب','محادثة مباشرة مع الدار',wa]);
-  if(U(st.facebook))cards.push([IC.facebook[0],IC.facebook[1],'فيسبوك','تابع صفحتنا على فيسبوك',U(st.facebook)]);
-  if(U(st.instagram))cards.push([IC.instagram[0],IC.instagram[1],'انستجرام','تابع حسابنا على انستجرام',U(st.instagram)]);
-  if(U(st.location))cards.push(['#e53935','M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z','موقع الدار','افتح الموقع على الخريطة',U(st.location)]);
-  g.innerHTML=cards.map(([c,p,t,s,h])=>`<a class="card contact-card" href="${h}" target="_blank" rel="noopener"><span class="cc-ic" style="background:${c}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${p}"/></svg></span><span class="cc-tx"><b>${t}</b><small>${s}</small></span></a>`).join('')||'<div class="empty">بيانات التواصل ستظهر قريبًا</div>';
+  if(wa)items.push([IC.whatsapp[0],IC.whatsapp[1],'تواصل واتساب',wa]);
+  if(U(st.facebook))items.push([IC.facebook[0],IC.facebook[1],'صفحة فيسبوك',U(st.facebook)]);
+  if(U(st.instagram))items.push([IC.instagram[0],IC.instagram[1],'حساب انستجرام',U(st.instagram)]);
+  if(U(st.location))items.push(['#e53935','M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z','موقع الدار على الخريطة',U(st.location)]);
+  g.innerHTML=items.map(([c,p,t,h])=>`<a href="${h}" target="_blank" rel="noopener" style="background:${c}" aria-label="${t}" title="${t}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${p}"/></svg></a>`).join('');
+  if(box)box.hidden=!items.length;
 }
 function render(){
   const st=S.settings||{};
@@ -387,7 +390,8 @@ function render(){
 function route(){
   const raw=(location.hash||'#home').slice(1);
   if(raw==='chat'){if(typeof window.openChat==='function')window.openChat();history.replaceState(null,'',location.pathname+(location.search||''));return}
-  const h=raw,ok=['home','grads','events','news','contact'].includes(h)?h:'home';
+  if(raw==='contact'){$('#contact')?.scrollIntoView({block:'end'});return}
+  const h=raw,ok=['home','grads','events','news'].includes(h)?h:'home';
   document.querySelectorAll('.pg').forEach(e=>e.classList.toggle('on',e.id===ok));
   document.querySelectorAll('.navl').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+ok));
   scrollTo(0,0);
