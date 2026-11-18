@@ -12,6 +12,9 @@ const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "meta-llama/llama-3.3-70b-instruct:free";
 const POLLINATIONS_URL = "https://text.pollinations.ai/openai";
 
+// رابط قابل للنقر يوجّه المستخدم لقسم «تواصل معنا» بدل عرض روابط خام لا يعرف كيف يستخدمها.
+const CONTACT_LINK = "[📞 افتح صفحة «تواصل معنا»](#contact)";
+
 const SYSTEM_PROMPT =
   "أنت مساعد تعليمي عربي داخل موقع «دار روضة المحبين» لتحفيظ القرآن الكريم. " +
   "أجب بالعربية الفصحى المبسّطة، وافهم العامية المصرية والأخطاء الإملائية، وكن موجزًا وواضحًا ومنظّمًا بالنقاط. " +
@@ -20,8 +23,9 @@ const SYSTEM_PROMPT =
   "ولا تخترع أحكامًا أو أرقامًا أو أسماء، وإذا لم تكن متأكدًا فقل ذلك صراحةً بلطف ووجّه السائل لسؤال معلم موثوق. " +
   "لا تُصدر فتاوى في المسائل الشخصية، ونبّه أن الحكم النهائي لعالم موثوق. " +
   "أجِب عن أسئلة الدار والأخبار والفعاليات من «معلومات الموقع» المرفقة فقط، " +
-  "وعند السؤال عن التواصل اعرض روابط أزرار التواصل المذكورة فيها كما هي، " +
-  "وإذا لم تتوفر معلومة عن الدار فاعتذر بلطف وبالعامية ووجّه المستخدم لأزرار التواصل دون اختراع أي بيانات.";
+  "وعند السؤال عن التواصل لا تكتب روابط خام إطلاقًا، بل اذكر وسائل التواصل بالاسم " +
+  "واختم بهذا الرابط القابل للنقر كما هو: " + CONTACT_LINK + " — مرة واحدة فقط دون تكرار. " +
+  "وإذا لم تتوفر معلومة عن الدار فاعتذر بلطف وبالعامية ووجّه المستخدم لصفحة «تواصل معنا» دون اختراع أي بيانات.";
 
 function normalize(text) {
   return String(text || "")
@@ -36,20 +40,32 @@ function normalize(text) {
     .trim();
 }
 
+// تجريد «ال» التعريف وحروف الجر الملتصقة (وال/فال/بال/كال/لل) — حتى تتطابق
+// صيغ السؤال العامية («كام حرف للاقلاب») مع المفاتيح الفصحى («الاقلاب»).
+function fold(text) {
+  return normalize(text)
+    .replace(/(^|\s)[وفبك]?(?:ال|لل)(?=\S)/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function matchKnowledge(question, limit = 3) {
-  const q = normalize(question);
+  const q = fold(question);
   if (!q) return [];
-  return KB.map((entry) => {
+  const scored = KB.map((entry) => {
     const score = entry.keys.reduce((acc, key) => {
-      const k = normalize(key);
+      const k = fold(key);
       return k && q.includes(k) ? acc + k.length : acc;
     }, 0);
     return { entry, score };
   })
     .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
-    .map((x) => x.entry);
+    .sort((a, b) => b.score - a.score);
+
+  if (!scored.length) return [];
+  // نُبقي الإجابة الأدق فقط (وما يقاربها في الدقة) حتى لا تتراكم إجابات عامة بلا داعٍ.
+  const best = scored[0].score;
+  return scored.filter((x) => x.score >= best * 0.5).slice(0, limit).map((x) => x.entry);
 }
 
 function cleanHistory(history) {
@@ -81,9 +97,16 @@ const SOCIAL_BUTTONS = [
 const TONE = {
   hi: "أهلًا بيك 👋",
   nope: "معرفش بصراحة يا صاحبي 🙈 المعلومة دي مش متوفرة عندي دلوقتي",
-  cta: "بس تقدر تتواصل معانا على طول من أزرار التواصل 👇",
+  cta: "بس تقدر تتواصل معانا على طول من صفحة «تواصل معنا» 👇",
   help: "لو محتاج حاجة تانية اكتبلي وأنا معاك 🙌",
 };
+
+// يوجّه المستخدم لقسم «تواصل معنا» بلينك قابل للنقر بدل الروابط الخام.
+function contactHint(s) {
+  const names = contactButtons(s).map((b) => b.label).join("، ");
+  const head = names ? "تقدر تتواصل معانا من: " + names + "." : "تقدر تتواصل معانا من صفحة التواصل.";
+  return head + "\n" + CONTACT_LINK;
+}
 
 const SITE_TOPICS = [
   { id: "contact", keys: ["تواصل", "اتواصل", "التواصل", "رقم", "تليفون", "هاتف", "موبايل", "جوال", "واتس", "واتساب", "كلم", "اتصل", "whatsapp", "phone", "contact"] },
@@ -116,10 +139,6 @@ function contactButtons(s) {
   return out;
 }
 
-function buttonLines(s) {
-  return contactButtons(s).map((b) => "• " + b.label + ": " + b.url).join("\n");
-}
-
 const TIME_HINTS =
   /(الساع|الساعه|\d{1,2}\s*[:.]\s*\d{2}|صباح|مساء|عصر|ظهر|مغرب|عشاء|فجر|من\s+ال|بعد\s+ال|قبل\s+ال|يومي|اسبوع|أسبوع|السبت|الاحد|الأحد|الاثنين|الإثنين|الثلاثاء|الاربعاء|الأربعاء|الخميس|الجمعة|الجمعه|كل\s+يوم|ميعاد|مواعيد|يبدا|تبدا|ينتهي|تنتهي)/;
 
@@ -135,10 +154,10 @@ function extractSchedule(s, posts, events) {
   return "";
 }
 
-// رسالة لطيفة عند غياب المعلومة، مع توجيه لأزرار التواصل إن وُجدت.
+// رسالة لطيفة عند غياب المعلومة، مع توجيه لصفحة التواصل إن وُجدت.
 function friendlyMiss(s, reason = "") {
-  const btns = contactButtons(s);
-  const tail = btns.length ? TONE.cta + "\n" + buttonLines(s) : "بس تقدر تسأل حد من الدار على طول 🙏";
+  const hasBtns = contactButtons(s).length > 0;
+  const tail = hasBtns ? TONE.cta + "\n" + CONTACT_LINK : "بس تقدر تسأل حد من الدار على طول 🙏";
   const head = reason ? TONE.hi + "\nمعرفش بصراحة يا صاحبي 🙈 " + reason : TONE.hi + "\n" + TONE.nope;
   return head + ".\n" + tail;
 }
@@ -153,8 +172,8 @@ function buildSiteText(site) {
     pickField(s, "about") ? "نبذة الدار: " + pickField(s, "about") : "",
     pickField(s, "address") ? "العنوان: " + pickField(s, "address") : "",
     btns.length
-      ? "أزرار التواصل المتاحة في الموقع (استخدمها عند سؤال المستخدم عن التواصل): " +
-        btns.map((b) => b.label + " (" + b.url + ")").join("، ")
+      ? "وسائل التواصل المتاحة في الموقع (اذكرها بالاسم فقط عند سؤال المستخدم عن التواصل، ولا تكتب روابطها): " +
+        btns.map((b) => b.label).join("، ")
       : "",
     pickField(s, "email") ? "البريد الإلكتروني: " + pickField(s, "email") : "",
     sch ? "المواعيد: " + sch : "",
@@ -174,13 +193,13 @@ function buildSiteText(site) {
 // يُرجع إجابة مباشرة من بيانات الموقع، أو null إذا لم يتعلق السؤال بالدار.
 function answerFromSite(question, site) {
   const s = site?.settings || site || {};
-  const q = normalize(question);
+  const q = fold(question);
   if (!q) return null;
 
   let best = null;
   for (const topic of SITE_TOPICS) {
     const score = topic.keys.reduce((acc, key) => {
-      const k = normalize(key);
+      const k = fold(key);
       return k && q.includes(k) ? acc + k.length : acc;
     }, 0);
     if (score > 0 && (!best || score > best.score)) best = { topic, score };
@@ -188,7 +207,6 @@ function answerFromSite(question, site) {
   if (!best) return null;
 
   const btns = contactButtons(s);
-  const btnBlock = btns.length ? buttonLines(s) : "";
 
   switch (best.topic.id) {
     case "contact": {
@@ -200,12 +218,12 @@ function answerFromSite(question, site) {
           ".\nجرّب تبص على صفحة الموقع أو تسأل حد من الدار على طول 🙏"
         );
       }
-      return TONE.hi + " تقدر تتواصل معانا بسهولة من الأزرار دي:\n" + btnBlock + "\n" + TONE.help;
+      return TONE.hi + "\n" + contactHint(s) + "\n" + TONE.help;
     }
     case "hours": {
       const sch = extractSchedule(s, site?.posts, site?.events);
       if (sch) {
-        return TONE.hi + "\nالمواعيد عندنا كالتالي: " + sch + "\nلو عايز تتأكد أكتر، كلمنا من أزرار التواصل 👇\n" + btnBlock;
+        return TONE.hi + "\nالمواعيد عندنا كالتالي: " + sch + "\n" + (btns.length ? TONE.cta + "\n" + CONTACT_LINK : "");
       }
       return friendlyMiss(s, "مفيش مواعيد مكتوبة عندي");
     }
@@ -213,8 +231,8 @@ function answerFromSite(question, site) {
       const addr = pickField(s, "address");
       const loc = pickField(s, "location");
       if (addr || loc) {
-        let r = TONE.hi + "\nعنوان الدار: " + (addr || "شوف الموقع على الخريطة");
-        if (loc) r += "\n📍 الخريطة: " + loc;
+        let r = TONE.hi + "\n" + (addr ? "عنوان الدار: " + addr : "عنوان الدار هتلاقيه على الخريطة 📍");
+        if (loc) r += "\nتقدر تشوف المكان على الخريطة من " + CONTACT_LINK;
         return r;
       }
       return friendlyMiss(s, "مفيش عنوان مسجّل عندي");
@@ -222,12 +240,12 @@ function answerFromSite(question, site) {
     case "register": {
       const reg = pickField(s, "register");
       if (reg) {
-        return TONE.hi + "\nللتسجيل في الدار: " + reg + (btnBlock ? "\n" + TONE.cta + "\n" + btnBlock : "");
+        return TONE.hi + "\nللتسجيل في الدار: " + reg + (btns.length ? "\n" + TONE.cta + "\n" + CONTACT_LINK : "");
       }
       return (
         TONE.hi +
         "\nالتسجيل متاح إن شاء الله 👍" +
-        (btnBlock ? " " + TONE.cta + "\n" + btnBlock : " اسأل حد من الدار للتفاصيل 🙏")
+        (btns.length ? " " + TONE.cta + "\n" + CONTACT_LINK : " اسأل حد من الدار للتفاصيل 🙏")
       );
     }
     case "teachers": {
